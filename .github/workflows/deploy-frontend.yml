@@ -1,5 +1,8 @@
 name: Deploy Angular FE to Cloud Run
 
+permissions:
+  contents: read
+  
 on:
   workflow_dispatch:
 

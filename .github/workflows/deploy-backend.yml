@@ -1,5 +1,8 @@
 name: Deploy Python BE to Cloud Run
 
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
 
