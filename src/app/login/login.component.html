@@ -1,11 +1,11 @@
 <div class="container">
     <div class="config-box">
-    <h3>Login</h3>
-Per poter accedere alle funzionalità, è necessario autenticarsi con google.
+    <h3>{{ 'LOGIN.H3' | translate }}</h3>
+{{ 'LOGIN.DESC' | translate }}
 
 
 <button class="mdc-button mdc-button--raised" (click)="login()">
-  <span class="mdc-button__label">Accedi con Google</span>
+  <span class="mdc-button__label">{{ 'LOGIN.SUBMIT' | translate }}</span>
 </button>
 
 </div>

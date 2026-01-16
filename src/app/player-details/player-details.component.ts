@@ -7,11 +7,12 @@ import * as Papa from 'papaparse';
 
 import { CsvMapperService } from '../services/csv-mapper.service';
 import { HattrickCsvRow, PlayerResult, AnalysisResponse } from '../models/hattrick.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-player-details',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule, HttpClientModule, TranslateModule],
   templateUrl: './player-details.component.html',
 })
 export class PlayerDetailsComponent {

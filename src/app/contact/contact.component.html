@@ -1,34 +1,34 @@
 <div class="container">
     <div class="config-box">
-    <h3>Contattaci</h3>
+    <h3>{{ 'CONTACT.H3' | translate }}</h3>
 
 <form [formGroup]="contactForm" (ngSubmit)="submit()">
   <label>
-    Nome:
+    {{ 'CONTACT.FIELD_NAME' | translate }}
     <input formControlName="name" />
   </label>
   <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
-    Il nome è obbligatorio
+    {{ 'CONTACT.FIELD_NAME_DESC' | translate }}
   </div> 
 
   <label>
-    Email:
+    {{ 'CONTACT.FIELD_EMAIL' | translate }}
     <input formControlName="email" type="email" />
   </label>
   <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
-    Inserisci una email valida
+    {{ 'CONTACT.FIELD_EMAIL_DESC' | translate }}
   </div> 
 
   <label>
-    Messaggio:
+    {{ 'CONTACT.FIELD_MSG' | translate }}
     <textarea formControlName="message"></textarea>
   </label>
   <div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
-    Il messaggio è obbligatorio
+   {{ 'CONTACT.FIELD_MSG_DESC' | translate }}
   </div>
 
 
-  <button type="submit" [disabled]="contactForm.invalid">Invia</button>
+  <button type="submit" [disabled]="contactForm.invalid">{{ 'CONTACT.SUBMIT' | translate }}</button>
 </form>
 
 </div>

@@ -1,0 +1,52 @@
+{
+  "HOME": {
+    "TITLE": "Welcome",
+    "DESCRIPTION": "This is the home page"
+  },
+   "MENU": {
+    "MANAGELIST": "List Management",
+    "MAKEPORTALLINK": "Portal Link Generator"
+  },
+  "CONTACT": {
+    "H3": "Contact Us",
+    "FIELD_NAME": "Name",
+    "FIELD_NAME_DESC": "Name is required",
+    "FIELD_EMAIL": "Email",
+    "FIELD_EMAIL_DESC": "Enter a valid email",
+    "FIELD_MSG": "Message",
+    "FIELD_MSG_DESC": "Message is required",
+    "SUBMIT": "Send"
+  },
+  "LOGIN": {
+    "H3": "Login",
+    "DESC": "To access the features, you need to authenticate with Google.",
+    "SUBMIT": "Sign in with Google"
+  },
+  "MAKEPORTALLINK": {
+    "H3": "Generate Portal Link",
+    "DESC": "Go to profile"
+  },
+  "PLAYER_DETAIL": {
+    "TITLE": "List Management",
+    "DESCRIPTION": "Select how you want to analyze players and upload the CSV file of the list to analyze.",
+    "ROLE_LABEL": "Analyze by Role:",
+    "TARGET_TEAM_LABEL": "Target Team:",
+    "VARIANT_LABEL": "Tactical Variant:",
+    "CSV_FILE_LABEL": "CSV File:",
+    "ANALYSIS_TITLE": "Role Analysis:",
+    "PLAYER_COLUMN": "Player",
+    "MARKET_COLUMN": "Market",
+    "AGE_COLUMN": "Age",
+    "TARGET_STATUS_COLUMN": "Target Status",
+    "SKILLS_STATUS_COLUMN": "Skills Status",
+    "TRAINING_CHECK_COLUMN": "Training & Stamina Check",
+    "STAFF_CHECK_COLUMN": "Staff Check",
+    "SCOUT_NOTE_COLUMN": "Scout Note",
+    "NO_SPECIFIC_TARGET": "No specific target.",
+    "LOADING_ANALYSIS": "⏳ Analyzing...",
+    "RECENT_DATA": "✅ Recent Data",
+    "STAFF_INADEQUATE": "❌ Inadequate coach staff",
+    "WARNING_STATUS": "⚠️",
+    "MARKET_AVAILABLE": "❌ On the market"
+  }
+}
