@@ -5,6 +5,11 @@ RUN npm install -g @angular/cli
 RUN npm install --legacy-peer-deps
 COPY . ./
 
+# CREA environment.ts dinamicamente
+RUN mkdir -p src/environments && \
+    echo "export const environment = { production: false, firebase: { apiKey: 'dummy', authDomain: 'dummy', projectId: 'dummy', appId: 'dummy', messagingSenderId: 'dummy' } };" > src/environments/environment.ts
+
+
 ARG FIREBASE_API_KEY
 ARG FIREBASE_AUTH_DOMAIN
 ARG FIREBASE_PROJECT_ID

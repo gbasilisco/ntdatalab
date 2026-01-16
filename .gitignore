@@ -5,3 +5,4 @@ src/assets/.gitkeep
 src/environments/environment.ts
 key.json
 .angular/cache/
+dist/
