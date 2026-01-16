@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="config-box">
+    <h3>Contattaci</h3>
+
+<form [formGroup]="contactForm" (ngSubmit)="submit()">
+  <label>
+    Nome:
+    <input formControlName="name" />
+  </label>
+  <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched">
+    Il nome è obbligatorio
+  </div> 
+
+  <label>
+    Email:
+    <input formControlName="email" type="email" />
+  </label>
+  <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched">
+    Inserisci una email valida
+  </div> 
+
+  <label>
+    Messaggio:
+    <textarea formControlName="message"></textarea>
+  </label>
+  <div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+    Il messaggio è obbligatorio
+  </div>
+
+
+  <button type="submit" [disabled]="contactForm.invalid">Invia</button>
+</form>
+
+</div>
+</div>
