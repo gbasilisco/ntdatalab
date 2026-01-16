@@ -1,11 +1,7 @@
 name: Deploy Angular FE to Cloud Run
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '.'
+  workflow_dispatch:
 
 jobs:
   deploy:
