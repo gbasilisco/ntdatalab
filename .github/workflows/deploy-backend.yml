@@ -20,7 +20,6 @@ jobs:
       - uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          export_default_credentials: true
 
       # 4️⃣ Deploy su Cloud Run usando la cartella backend
       - name: Deploy Python backend
