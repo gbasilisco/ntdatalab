@@ -5,7 +5,7 @@ The backend was generated with Python 3.14
 
 NT Data Lab is a tool to simplify the scout/coach job, in the NT/U21 environment, for the [hattrick](https://www.hattrick.org/en-us/) users
 
-The porject is designed to run on the Google Cloud(https://cloud.google.com/)
+The porject is designed to run on the [Google Cloud](https://cloud.google.com/)
 
 The project is not connected in any way to [hattrick.org](https://www.hattrick.org/en-us/)
 
