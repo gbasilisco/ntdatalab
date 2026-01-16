@@ -23,7 +23,7 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
-          gcloud run deploy ntdatalabfe \
+          gcloud run deploy nt-data-lab \
              --source backend \
             --region ${{ secrets.GCP_REGION }} \
             --platform managed \
