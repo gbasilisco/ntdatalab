@@ -3,3 +3,5 @@ node_modules/
 package-lock.json
 src/assets/.gitkeep
 src/environments/environment.ts
+key.json
+.angular/cache/
