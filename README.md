@@ -9,6 +9,8 @@ The porject is designed to run on the [Google Cloud](https://cloud.google.com/)
 
 The project is not connected in any way to [hattrick.org](https://www.hattrick.org/en-us/)
 
+You can use NT Data Lab at this url: https://ntdatalab.com/
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
