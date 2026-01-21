@@ -212,7 +212,10 @@ class HattrickAdvisor:
             curr_val = current_skills.get(skill_name, 0)
             
             # Calcolo percentuale completamento
-            pct = min(100, int((curr_val / target_val) * 100))
+            if target_val > 0:
+                pct = min(100, int((curr_val / target_val) * 100))
+            else:
+                pct = 100 if curr_val >= target_val else 0
             
             if curr_val >= target_val:
                 status_icon = "✅"
