@@ -1,16 +1,19 @@
 <div class="container">
-  <div class="config-box">
-    <h3> {{ 'MAKEPORTALLINK.H3' | translate }}</h3>
+  <h2>{{ 'MAKEPORTALLINK.H3' | translate }}</h2>
+  <a routerLink="/" class="btn-back">{{ 'COMMON.BACK' | translate }}</a>
 
-    <label for="playerId">Player ID:</label>
-    <input id="playerId" type="text" [(ngModel)]="playerId" placeholder="Inserisci Player ID" />
+  <div class="card-form">
+    <div class="form-group">
+      <label for="playerId">Player ID:</label>
+      <input id="playerId" type="text" [(ngModel)]="playerId" placeholder="Inserisci Player ID" />
+    </div>
 
-    <p *ngIf="playerId">
+    <div *ngIf="playerId" class="result-box">
       Link:
       <a [href]="'https://hattrickportal.online/Tracker/Player.aspx?playerID=' + playerId" target="_blank"
         rel="noopener noreferrer">
         {{ 'MAKEPORTALLINK.DESC' | translate }}
       </a>
-    </p>
+    </div>
   </div>
 </div>

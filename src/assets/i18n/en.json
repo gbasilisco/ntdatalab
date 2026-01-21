@@ -3,9 +3,10 @@
     "TITLE": "Welcome",
     "DESCRIPTION": "This is the home page"
   },
-   "MENU": {
+  "MENU": {
     "MANAGELIST": "List Management",
-    "MAKEPORTALLINK": "Portal Link Generator"
+    "MAKEPORTALLINK": "Portal Link Generator",
+    "MANAGE_TARGETS": "Manage Targets"
   },
   "CONTACT": {
     "H3": "Contact Us",
@@ -48,5 +49,30 @@
     "STAFF_INADEQUATE": "❌ Inadequate coach staff",
     "WARNING_STATUS": "⚠️",
     "MARKET_AVAILABLE": "❌ On the market"
+  },
+  "COMMON": {
+    "BACK": "Back"
+  },
+  "MANAGE_TARGETS": {
+    "TITLE": "Manage Targets",
+    "NEW_TARGET": "New Target",
+    "EDIT_TARGET": "Edit Target",
+    "ROLE": "Role",
+    "NAME": "Name",
+    "NEW_NAME_QA": "New name?",
+    "PLACEHOLDER_NAME": "Target Name (e.g. MyU21)",
+    "VARIANT": "Variant",
+    "PLACEHOLDER_VARIANT": "Variant (e.g. Normal, PNF)",
+    "SKILLS": "Base Skills",
+    "SAVE": "Save Target",
+    "SAVING": "Saving...",
+    "RESET": "Reset",
+    "CANCEL": "Cancel Edit",
+    "YOUR_TARGETS": "Your Targets",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CONFIRM_DELETE": "Are you sure you want to delete this target?",
+    "LOADING": "Loading...",
+    "NO_TARGETS": "No targets created."
   }
 }

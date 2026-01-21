@@ -1,0 +1,54 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card-form {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-back {
+    display: inline-block;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color: #666;
+}
+
+.result-box {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    border-left: 4px solid #007bff;
+}
+
+.result-box a {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.result-box a:hover {
+    text-decoration: underline;
+}

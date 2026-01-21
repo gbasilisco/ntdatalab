@@ -5,7 +5,8 @@
   },
   "MENU": {
     "MANAGELIST": "Gestione liste",
-    "MAKEPORTALLINK": "Portal Link Generator"
+    "MAKEPORTALLINK": "Portal Link Generator",
+    "MANAGE_TARGETS": "Gestione Target"
   },
   "CONTACT": {
     "H3": "Contattaci",
@@ -49,20 +50,29 @@
     "WARNING_STATUS": "⚠️",
     "MARKET_AVAILABLE": "❌ Sul mercato"
   },
+  "COMMON": {
+    "BACK": "Indietro"
+  },
   "MANAGE_TARGETS": {
     "TITLE": "Gestione Target",
     "NEW_TARGET": "Nuovo Target",
     "EDIT_TARGET": "Modifica Target",
     "ROLE": "Ruolo",
-    "NAME": "Nome (es. U21, NT)",
-    "VARIANT": "Variante (es. Normal, PNF)",
+    "NAME": "Nome",
+    "NEW_NAME_QA": "Nuovo nome?",
+    "PLACEHOLDER_NAME": "Nome Target (es. MyU21)",
+    "VARIANT": "Variante",
+    "PLACEHOLDER_VARIANT": "Variante (es. Normal, PNF)",
     "SKILLS": "Skills Base",
     "SAVE": "Salva Target",
     "SAVING": "Salvataggio...",
-    "CANCEL": "Annulla",
+    "RESET": "Reset",
+    "CANCEL": "Annulla Modifica",
     "YOUR_TARGETS": "I tuoi Target",
     "EDIT": "Modifica",
     "DELETE": "Elimina",
-    "CONFIRM_DELETE": "Sei sicuro di voler eliminare questo target?"
+    "CONFIRM_DELETE": "Sei sicuro di voler eliminare questo target?",
+    "LOADING": "Caricamento...",
+    "NO_TARGETS": "Nessun target creato."
   }
 }

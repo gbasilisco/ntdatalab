@@ -1,27 +1,42 @@
 <div class="container">
-    <h2>Gestione Target</h2>
+    <h2>{{ 'MANAGE_TARGETS.TITLE' | translate }}</h2>
+    <a routerLink="/player" class="btn-back">{{ 'COMMON.BACK' | translate }}</a>
 
     <div class="card-form">
-        <h3>{{ newTarget.id ? 'Modifica Target' : 'Nuovo Target' }}</h3>
+        <h3>{{ newTarget.id ? ('MANAGE_TARGETS.EDIT_TARGET' | translate) : ('MANAGE_TARGETS.NEW_TARGET' | translate) }}
+        </h3>
 
         <div class="form-group">
-            <label>Ruolo:</label>
+            <label>{{ 'MANAGE_TARGETS.ROLE' | translate }}:</label>
             <select [(ngModel)]="newTarget.role">
                 <option *ngFor="let r of availableRoles" [value]="r.value">{{ r.label }}</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>Nome (es. U21, NT):</label>
-            <input type="text" [(ngModel)]="newTarget.name" placeholder="Nome Target">
+            <label>{{ 'MANAGE_TARGETS.NAME' | translate }}:</label>
+            <div class="name-selection">
+                <div class="toggle-new">
+                    <input type="checkbox" [(ngModel)]="isNewName" id="isNewName">
+                    <label for="isNewName">{{ 'MANAGE_TARGETS.NEW_NAME_QA' | translate }}</label>
+                </div>
+
+                <input *ngIf="isNewName" type="text" [(ngModel)]="newTarget.name"
+                    [placeholder]="'MANAGE_TARGETS.PLACEHOLDER_NAME' | translate">
+
+                <select *ngIf="!isNewName" [(ngModel)]="newTarget.name">
+                    <option *ngFor="let n of existingNames" [value]="n">{{ n }}</option>
+                </select>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>Variante (es. Normal, PNF):</label>
-            <input type="text" [(ngModel)]="newTarget.variant" placeholder="Variante">
+            <label>{{ 'MANAGE_TARGETS.VARIANT' | translate }}:</label>
+            <input type="text" [(ngModel)]="newTarget.variant"
+                [placeholder]="'MANAGE_TARGETS.PLACEHOLDER_VARIANT' | translate">
         </div>
 
-        <h4>Skills Base</h4>
+        <h4>{{ 'MANAGE_TARGETS.SKILLS' | translate }}</h4>
         <div class="skills-grid">
             <div class="skill-item" *ngFor="let skill of availableStats">
                 <label>{{ skill | titlecase }}:</label>
@@ -31,33 +46,43 @@
 
         <div class="actions">
             <button (click)="saveTarget()" [disabled]="isLoading">
-                {{ isLoading ? 'Salvataggio...' : 'Salva Target' }}
+                {{ isLoading ? ('MANAGE_TARGETS.SAVING' | translate) : ('MANAGE_TARGETS.SAVE' | translate) }}
             </button>
-            <button (click)="resetForm()" class="btn-cancel" *ngIf="newTarget.id">Annulla Modifica</button>
+            <button (click)="resetForm()" class="btn-cancel">{{ 'MANAGE_TARGETS.RESET' | translate }}</button>
         </div>
     </div>
 
     <hr>
 
-    <h3>I tuoi Target</h3>
-    <div *ngIf="isLoading && !targets.length">Caricamento...</div>
+    <h3>{{ 'MANAGE_TARGETS.YOUR_TARGETS' | translate }}</h3>
+    <div *ngIf="isLoading && !targets.length">{{ 'MANAGE_TARGETS.LOADING' | translate }}</div>
 
-    <div class="targets-list" *ngIf="!isLoading">
-        <div class="target-item" *ngFor="let t of targets">
-            <div class="target-info">
-                <strong>{{ t.role | uppercase }}</strong> - {{ t.name }} ({{ t.variant }})
-                <div class="target-stats">
-                    <span *ngFor="let s of t.stats | keyvalue">
-                        <ng-container *ngIf="s.value > 0">
-                            {{ s.key }}: {{ s.value }} |
-                        </ng-container>
-                    </span>
+    <div *ngIf="!isLoading">
+        <div *ngFor="let name of objectKeys(groupedTargets)" class="group-card">
+            <div class="group-header">{{ name }}</div>
+            <div class="group-list">
+                <div class="target-item" *ngFor="let t of groupedTargets[name]">
+                    <div class="target-info">
+                        <strong>{{ t.role | uppercase }}</strong> - <span class="badge">{{ t.variant }}</span>
+                        <div class="target-stats">
+                            <span *ngFor="let s of t.stats | keyvalue">
+                                <ng-container *ngIf="s.value > 0">
+                                    {{ s.key }}: {{ s.value }} |
+                                </ng-container>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="target-actions">
+                        <button (click)="editTarget(t)">{{ 'MANAGE_TARGETS.EDIT' | translate }}</button>
+                        <button (click)="deleteTarget(t.id)" class="btn-danger">{{ 'MANAGE_TARGETS.DELETE' | translate
+                            }}</button>
+                    </div>
                 </div>
             </div>
-            <div class="target-actions">
-                <button (click)="editTarget(t)">Modifica</button>
-                <button (click)="deleteTarget(t.id)" class="btn-danger">Elimina</button>
-            </div>
+        </div>
+
+        <div *ngIf="targets.length === 0" class="empty-state">
+            {{ 'MANAGE_TARGETS.NO_TARGETS' | translate }}
         </div>
     </div>
 </div>

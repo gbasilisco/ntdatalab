@@ -1,37 +1,35 @@
 <div class="container">
-  
-  <div class="config-box">
+
+  <div class="card-form">
     <h3>{{ 'PLAYER_DETAIL.TITLE' | translate }}</h3>
-    <p><br></p>
-    <p>{{ 'PLAYER_DETAIL.DESCRIPTION' | translate }}</p>
-    <p><br></p>
+    <p class="text-muted mb-4">{{ 'PLAYER_DETAIL.DESCRIPTION' | translate }}</p>
 
     <div class="form-row">
-      <label>
-        {{ 'PLAYER_DETAIL.ROLE_LABEL' | translate }}
+      <div class="form-group">
+        <label>{{ 'PLAYER_DETAIL.ROLE_LABEL' | translate }}</label>
         <select [(ngModel)]="selectedRole" (change)="onRoleChange()" class="role-select">
           <option *ngFor="let r of roleOptions" [value]="r.value">
             {{ r.label }}
           </option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        {{ 'PLAYER_DETAIL.TARGET_TEAM_LABEL' | translate }}
+      <div class="form-group">
+        <label>{{ 'PLAYER_DETAIL.TARGET_TEAM_LABEL' | translate }}</label>
         <select [(ngModel)]="selectedTarget" (change)="onRoleChange()">
           <option *ngFor="let t of targetOptions" [value]="t">{{ t }}</option>
         </select>
-      </label>
+      </div>
 
-      <label>
-        {{ 'PLAYER_DETAIL.VARIANT_LABEL' | translate }}
+      <div class="form-group">
+        <label>{{ 'PLAYER_DETAIL.VARIANT_LABEL' | translate }}</label>
         <select [(ngModel)]="selectedVariant" (change)="onRoleChange()">
           <option *ngFor="let v of variantOptions" [value]="v">{{ v }}</option>
         </select>
-      </label>
+      </div>
     </div>
 
-    <div class="file-row">
+    <div class="form-group">
       <label>{{ 'PLAYER_DETAIL.CSV_FILE_LABEL' | translate }}</label>
       <input type="file" (change)="onFileSelected($event)" accept=".csv" />
     </div>
@@ -40,7 +38,7 @@
   <div class="results-section" *ngIf="playerResults.length > 0">
     <p><br></p>
     <h4>
-      {{ 'PLAYER_DETAIL.ANALYSIS_TITLE' | translate }} 
+      {{ 'PLAYER_DETAIL.ANALYSIS_TITLE' | translate }}
       <span style="color:#007bff">{{ selectedRole | uppercase }}</span>
     </h4>
 
@@ -48,14 +46,21 @@
       <table class="mdc-data-table__table">
         <thead>
           <tr class="mdc-data-table__header-row">
-            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.PLAYER_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 5%">{{ 'PLAYER_DETAIL.MARKET_COLUMN' | translate }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.PLAYER_COLUMN' | translate }}
+            </th>
+            <th class="mdc-data-table__header-cell" style="width: 5%">{{ 'PLAYER_DETAIL.MARKET_COLUMN' | translate }}
+            </th>
             <th class="mdc-data-table__header-cell" style="width: 5%">{{ 'PLAYER_DETAIL.AGE_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.TARGET_STATUS_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 20%">{{ 'PLAYER_DETAIL.SKILLS_STATUS_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 25%">{{ 'PLAYER_DETAIL.TRAINING_CHECK_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 5%">{{ 'PLAYER_DETAIL.STAFF_CHECK_COLUMN' | translate }}</th>
-            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.SCOUT_NOTE_COLUMN' | translate }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.TARGET_STATUS_COLUMN' |
+              translate }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 20%">{{ 'PLAYER_DETAIL.SKILLS_STATUS_COLUMN' |
+              translate }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 25%">{{ 'PLAYER_DETAIL.TRAINING_CHECK_COLUMN' |
+              translate }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 5%">{{ 'PLAYER_DETAIL.STAFF_CHECK_COLUMN' | translate
+              }}</th>
+            <th class="mdc-data-table__header-cell" style="width: 10%">{{ 'PLAYER_DETAIL.SCOUT_NOTE_COLUMN' | translate
+              }}</th>
           </tr>
         </thead>
         <tbody class="mdc-data-table__content">
@@ -64,7 +69,8 @@
               <small>
                 {{ p.fullName }} <br>
                 <strong>
-                  <a href="https://hattrickportal.online/Tracker/Player.aspx?playerID={{ p.id }}" target="_portal{{ p.id }}">
+                  <a href="https://hattrickportal.online/Tracker/Player.aspx?playerID={{ p.id }}"
+                    target="_portal{{ p.id }}">
                     ({{ p.id }})
                   </a>
                 </strong>
@@ -87,9 +93,8 @@
             <td class="mdc-data-table__cell">
               <div *ngIf="p.status === 'LOADING'">{{ 'PLAYER_DETAIL.LOADING_ANALYSIS' | translate }}</div>
               <div *ngIf="p.analysis">
-                <span class="badge" 
-                      [class.success]="p.analysis['4_role_targets'].status === 'COMPLETED'"
-                      [class.warning]="p.analysis['4_role_targets'].status === 'IN_PROGRESS'">
+                <span class="badge" [class.success]="p.analysis['4_role_targets'].status === 'COMPLETED'"
+                  [class.warning]="p.analysis['4_role_targets'].status === 'IN_PROGRESS'">
                   {{ p.analysis['4_role_targets'].status }}
                 </span>
                 <br>
@@ -102,16 +107,17 @@
 
             <td class="mdc-data-table__cell" style="vertical-align: top;">
               <div *ngIf="p.analysis; else waitingAnalysis">
-                <div *ngFor="let detail of p.analysis['4_role_targets'].details" 
-                     style="margin-bottom: 4px; font-size: 0.9em; display: flex; align-items: center;">
-                  
+                <div *ngFor="let detail of p.analysis['4_role_targets'].details"
+                  style="margin-bottom: 4px; font-size: 0.9em; display: flex; align-items: center;">
+
                   <span style="margin-right: 6px;">
                     <ng-container *ngIf="detail.status === 'OK'">✅</ng-container>
-                    <ng-container *ngIf="detail.status !== 'OK'">{{ 'PLAYER_DETAIL.WARNING_STATUS' | translate }}</ng-container>
+                    <ng-container *ngIf="detail.status !== 'OK'">{{ 'PLAYER_DETAIL.WARNING_STATUS' | translate
+                      }}</ng-container>
                   </span>
 
                   <span style="font-weight: bold; width: 90px; text-transform: capitalize;"
-                        [style.color]="detail.status === 'OK' ? '#28a745' : '#d9534f'">
+                    [style.color]="detail.status === 'OK' ? '#28a745' : '#d9534f'">
                     {{ detail.skill }}:
                   </span>
 
@@ -121,9 +127,9 @@
                     </strong>
                     <span style="color: #999;"> / {{ detail.target }}</span>
                   </span>
-                  
-                  <span *ngIf="detail.status !== 'OK'" 
-                        style="margin-left: 8px; font-size: 0.8em; color: #d9534f; background: #ffeeee; padding: 0 4px; border-radius: 4px;">
+
+                  <span *ngIf="detail.status !== 'OK'"
+                    style="margin-left: 8px; font-size: 0.8em; color: #d9534f; background: #ffeeee; padding: 0 4px; border-radius: 4px;">
                     {{ (detail.current - detail.target) | number:'1.0-1' }}
                   </span>
                 </div>
@@ -139,7 +145,7 @@
             <td class="mdc-data-table__cell" style="font-size: 0.9em; vertical-align: top;">
               <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <div style="color: #555;">📅 <strong>{{ p.lastUpdate }}</strong></div>
-                
+
                 <div *ngIf="p.analysis">
                   <div *ngIf="p.analysis['1_freshness']?.status === 'OK'" style="color: #28a745; font-size: 0.85em;">
                     {{ 'PLAYER_DETAIL.RECENT_DATA' | translate }}
@@ -159,7 +165,7 @@
                 <div *ngIf="p.analysis['3_compatibility']?.status !== 'OK'" style="color: #d9534f; margin-bottom: 5px;">
                   ⛔ {{ p.analysis['3_compatibility']?.message }}
                 </div>
-                
+
                 <div *ngIf="p.analysis['5_stamina'].status === 'WARNING'" style="color: #d9534f;">
                   ⚠️ {{ p.analysis['5_stamina'].message }}
                 </div>

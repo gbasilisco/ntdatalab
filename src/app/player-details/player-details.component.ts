@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -8,18 +8,24 @@ import * as Papa from 'papaparse';
 import { CsvMapperService } from '../services/csv-mapper.service';
 import { HattrickCsvRow, PlayerResult, AnalysisResponse } from '../models/hattrick.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { TargetsService } from '../services/targets.service';
+import { AuthService } from '../auth/auth.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-player-details',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule, TranslateModule],
   templateUrl: './player-details.component.html',
+  styleUrl: './player-details.component.css'
 })
-export class PlayerDetailsComponent {
+export class PlayerDetailsComponent implements OnInit {
 
   // --- CONFIGURAZIONE DROPDOWN ---
-  targetOptions = ['U21', 'NT', 'pippo'];
-  variantOptions = ['Normal', 'Counter-attack', 'PNF'];
+  targetOptions = ['U21', 'NT'];
+  variantOptions = ['Normal']; // Saranno popolati dinamicamente
+
+  userEmail: string | null = null;
 
   roleOptions = [
     { label: 'Centrocampista (Midfielder)', value: 'midfielder' },
@@ -48,8 +54,39 @@ export class PlayerDetailsComponent {
   constructor(
     private http: HttpClient,
     private mapper: CsvMapperService,
-    private zone: NgZone
-  ) {}
+    private zone: NgZone,
+    private targetsService: TargetsService,
+    private authService: AuthService
+  ) { }
+
+  ngOnInit() {
+    // 1. Ottieni Email Utente
+    this.authService.user$.pipe(take(1)).subscribe(user => {
+      this.userEmail = user ? user.email : null;
+
+      // 2. Se loggato, scarica i target custom
+      if (this.userEmail) {
+        this.fetchUserTargets();
+      }
+    });
+  }
+
+  fetchUserTargets() {
+    this.targetsService.getTargets().subscribe({
+      next: (res) => {
+        const targets = res.targets || [];
+
+        // Estrai nomi univoci e varianti univoche
+        const customNames = targets.map((t: any) => t.name);
+        const customVariants = targets.map((t: any) => t.variant);
+
+        // Merge con default avoiding duplicates
+        this.targetOptions = Array.from(new Set([...this.targetOptions, ...customNames]));
+        this.variantOptions = Array.from(new Set([...this.variantOptions, ...customVariants, 'Counter-attack', 'PNF']));
+      },
+      error: (err) => console.error('Errore fetch target', err)
+    });
+  }
 
   // =====================================================
   // CSV UPLOAD
@@ -152,7 +189,10 @@ export class PlayerDetailsComponent {
   // API CALL
   // =====================================================
   private analyzePlayer(payload: any, entry: PlayerResult): void {
-    this.http.post<AnalysisResponse>(this.API_URL, payload).subscribe({
+    // Aggiungi email al payload per il backend
+    const fullPayload = { ...payload, email: this.userEmail };
+
+    this.http.post<AnalysisResponse>(this.API_URL, fullPayload).subscribe({
       next: (res) => {
         entry.analysis = res;
 

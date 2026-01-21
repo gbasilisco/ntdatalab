@@ -14,7 +14,14 @@ import { TargetsService, UserTarget } from '../services/targets.service';
 export class ManageTargetsComponent implements OnInit {
 
   targets: UserTarget[] = [];
+  groupedTargets: { [key: string]: UserTarget[] } = {};
+  objectKeys = Object.keys; // Per usare Keys nel template
+
   isLoading = false;
+
+  // Gestione Nomi
+  existingNames: string[] = [];
+  isNewName = true; // Toggle per input vs select
 
   // Model per il form
   newTarget: UserTarget = {
@@ -56,6 +63,7 @@ export class ManageTargetsComponent implements OnInit {
     this.targetsService.getTargets().subscribe({
       next: (res) => {
         this.targets = res.targets || [];
+        this.processTargets();
         this.isLoading = false;
       },
       error: (err) => {
@@ -65,15 +73,43 @@ export class ManageTargetsComponent implements OnInit {
     });
   }
 
+  processTargets() {
+    // 1. Estrai nomi univoci
+    const names = new Set(this.targets.map(t => t.name));
+    this.existingNames = Array.from(names).sort();
+
+    // 2. Raggruppa per nome
+    this.groupedTargets = {};
+    this.targets.forEach(t => {
+      if (!this.groupedTargets[t.name]) {
+        this.groupedTargets[t.name] = [];
+      }
+      this.groupedTargets[t.name].push(t);
+    });
+  }
+
   saveTarget() {
     if (!this.newTarget.name) {
       alert('Inserisci un nome per il target');
       return;
     }
 
-    // Pulisci stats a 0 se vuoi, o lasciale
+    // Filtra solo le skill con valore > 0
+    const cleanStats: { [key: string]: number } = {};
+    for (const [key, value] of Object.entries(this.newTarget.stats)) {
+      if (value > 0) {
+        cleanStats[key] = value;
+      }
+    }
+
+    // Crea un oggetto target pulito da inviare
+    const targetToSave: UserTarget = {
+      ...this.newTarget,
+      stats: cleanStats
+    };
+
     this.isLoading = true;
-    this.targetsService.saveTarget(this.newTarget).subscribe({
+    this.targetsService.saveTarget(targetToSave).subscribe({
       next: (res) => {
         this.loadTargets(); // Ricarica lista
         this.resetForm();
@@ -104,6 +140,10 @@ export class ManageTargetsComponent implements OnInit {
   editTarget(target: UserTarget) {
     // Clona per evitare modifiche dirette alla lista prima del salvataggio
     this.newTarget = JSON.parse(JSON.stringify(target));
+
+    // Imposta modalità "esistente" se il nome è nella lista
+    this.isNewName = false;
+
     // Assicuriamoci che tutte le stats siano presenti nel form
     this.availableStats.forEach(s => {
       if (this.newTarget.stats[s] === undefined) {
@@ -113,6 +153,7 @@ export class ManageTargetsComponent implements OnInit {
   }
 
   resetForm() {
+    this.isNewName = true;
     this.newTarget = {
       role: 'midfielder',
       name: '',

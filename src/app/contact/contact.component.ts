@@ -7,8 +7,9 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule,TranslateModule],
-  templateUrl: './contact.component.html' // template separato
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule],
+  templateUrl: './contact.component.html',
+  styleUrl: './contact.component.css'
 })
 export class ContactComponent {
   contactForm = this.fb.group({
@@ -17,7 +18,7 @@ export class ContactComponent {
     message: ['', Validators.required]
   });
 
-  constructor(private fb: FormBuilder, private afs: AngularFirestore) {}
+  constructor(private fb: FormBuilder, private afs: AngularFirestore) { }
 
   submit() {
     if (this.contactForm.valid) {

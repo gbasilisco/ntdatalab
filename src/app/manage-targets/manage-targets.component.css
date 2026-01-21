@@ -8,7 +8,7 @@
   background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
@@ -21,11 +21,30 @@ label {
   margin-bottom: 5px;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.name-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.toggle-new {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.toggle-new input {
+  width: auto;
 }
 
 .skills-grid {
@@ -65,20 +84,43 @@ button:hover {
   background-color: #dc3545;
 }
 
-.targets-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.btn-back {
+  display: inline-block;
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #666;
+}
+
+/* Grouped List Styles */
+.group-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.group-header {
+  background: #f1f1f1;
+  padding: 10px 15px;
+  font-weight: bold;
+  border-bottom: 1px solid #ddd;
+}
+
+.group-list {
+  /* container for items */
 }
 
 .target-item {
-  background: white;
-  border: 1px solid #ddd;
   padding: 15px;
-  border-radius: 4px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.target-item:last-child {
+  border-bottom: none;
 }
 
 .target-stats {

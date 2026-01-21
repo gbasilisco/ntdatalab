@@ -5,47 +5,80 @@
   padding: 20px;
 }
 
-.config-box {
-  background: #f8f9fa;
-  border: 1px solid #ddd;
+.card-form {
+  background: #f9f9f9;
   padding: 20px;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
-.form-row, .file-row {
+.form-group {
   margin-bottom: 15px;
 }
 
-select, input[type="file"] {
-  padding: 8px;
-  margin-left: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+.form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
+.form-row>div {
+  flex: 1;
+  min-width: 200px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+select,
+input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background: white;
 }
 
-th, td {
+th,
+td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #eee;
 }
 
 th {
-  background-color: #2c3e50;
+  background-color: #007bff;
   color: white;
 }
 
 /* Status Rows */
-.row-SUCCESS { background-color: #d4edda; }
-.row-WARNING { background-color: #fff3cd; }
-.row-ERROR { background-color: #f8d7da; }
-.row-LOADING { background-color: #fff; opacity: 0.7; }
+.row-SUCCESS {
+  background-color: #d4edda;
+}
+
+.row-WARNING {
+  background-color: #fff3cd;
+}
+
+.row-ERROR {
+  background-color: #f8d7da;
+}
+
+.row-LOADING {
+  background-color: #fff;
+  opacity: 0.7;
+}
 
 /* Badges */
 .badge {
@@ -54,8 +87,23 @@ th {
   font-size: 0.85em;
   font-weight: bold;
 }
-.success { background-color: #28a745; color: white; }
-.warning { background-color: #ffc107; color: black; }
-.text-red { color: #dc3545; font-weight: bold; }
 
-ul { margin: 0; padding-left: 20px; }
+.success {
+  background-color: #28a745;
+  color: white;
+}
+
+.warning {
+  background-color: #ffc107;
+  color: black;
+}
+
+.text-red {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+ul {
+  margin: 0;
+  padding-left: 20px;
+}
