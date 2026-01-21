@@ -1,17 +1,20 @@
 import functions_framework
 from hattrick_advisor import HattrickAdvisor
-from firebase import TargetManager
+from firebase import TargetManager, RoleManager, ListManager
 
 @functions_framework.http
 def analyze_player(request):
     """
     HTTP Cloud Function entry point con gestione CORS.
-    Supporta sia l'analisi giocatore che la gestione target (CRUD).
+    Supporta:
+    - Analisi giocatore
+    - Gestione Target (CRUD)
+    - Gestione Ruoli (CRUD Coach)
+    - Gestione Liste (CRUD)
     """
     
     # --- 1. GESTIONE CORS (Pre-flight request) ---
     if request.method == 'OPTIONS':
-        # Permetti richieste da qualsiasi origine (o metti 'http://localhost:4200')
         headers = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'POST',
@@ -21,7 +24,6 @@ def analyze_player(request):
         return ('', 204, headers)
 
     # --- 2. GESTIONE CORS (Main request headers) ---
-    # Questi header vanno aggiunti anche alla risposta finale
     headers = {
         'Access-Control-Allow-Origin': '*'
     }
@@ -33,9 +35,9 @@ def analyze_player(request):
         return ({"error": "JSON payload mancante"}, 400, headers)
 
     try:
-        # Check if this is a target management request
         action = request_json.get('action')
         
+        # --- GESTIONE TARGET ---
         if action == 'manage_targets':
             manager = TargetManager()
             method = request_json.get('method') # get, save, delete
@@ -56,9 +58,73 @@ def analyze_player(request):
                 return (result, 200, headers)
                 
             else:
-                 return ({"error": "Metodo non valido"}, 400, headers)
+                 return ({"error": "Metodo target non valido"}, 400, headers)
 
-        # Default legacy behavior: Hattrick Analysis
+        # --- GESTIONE RUOLI (Coach Only) ---
+        elif action == 'manage_roles':
+            manager = RoleManager()
+            method = request_json.get('method')
+            requester = request_json.get('requesterEmail')
+            
+            if method == 'get_role':
+                email = request_json.get('email')
+                role = manager.get_role(email)
+                return ({"role": role}, 200, headers)
+
+            elif method == 'set_role':
+                target_email = request_json.get('targetEmail')
+                new_role = request_json.get('newRole')
+                result = manager.set_role(requester, target_email, new_role)
+                return (result, 200, headers)
+                
+            elif method == 'get_all':
+                users = manager.get_all_users(requester)
+                return ({"users": users}, 200, headers)
+            
+            else:
+                 return ({"error": "Metodo role non valido"}, 400, headers)
+
+        # --- GESTIONE LISTE ---
+        elif action == 'manage_lists':
+            manager = ListManager()
+            method = request_json.get('method')
+            email = request_json.get('email') # Requester
+            
+            if method == 'get_lists':
+                lists = manager.get_lists()
+                return ({"lists": lists}, 200, headers)
+                
+            elif method == 'create_list':
+                name = request_json.get('name')
+                result = manager.create_list(email, name)
+                return (result, 200, headers)
+                
+            elif method == 'delete_list':
+                list_id = request_json.get('listId')
+                result = manager.delete_list(email, list_id)
+                return (result, 200, headers)
+                
+            elif method == 'add_player':
+                list_id = request_json.get('listId')
+                player_id = request_json.get('playerId')
+                result = manager.add_player(list_id, player_id)
+                return (result, 200, headers)
+                
+            elif method == 'remove_player':
+                list_id = request_json.get('listId')
+                player_id = request_json.get('playerId')
+                result = manager.remove_player(list_id, player_id)
+                return (result, 200, headers)
+                
+            elif method == 'get_list_players':
+                list_id = request_json.get('listId')
+                players = manager.get_list_players(list_id)
+                return ({"players": players}, 200, headers)
+
+            else:
+                 return ({"error": "Metodo list non valido"}, 400, headers)
+
+        # --- DEFAULT: ANALISI ---
         # Fetch user targets if email is available
         user_targets = []
         email = request_json.get('email')
