@@ -59,8 +59,18 @@ def analyze_player(request):
                  return ({"error": "Metodo non valido"}, 400, headers)
 
         # Default legacy behavior: Hattrick Analysis
-        # Istanzia l'Advisor passando il JSON ricevuto
-        advisor = HattrickAdvisor(request_json)
+        # Fetch user targets if email is available
+        user_targets = []
+        email = request_json.get('email')
+        if email:
+            try:
+                manager = TargetManager()
+                user_targets = manager.get_user_targets(email)
+            except Exception as e:
+                print(f"Warning: could not fetch targets for {email}: {e}")
+
+        # Istanzia l'Advisor passando il JSON ricevuto e i target utente
+        advisor = HattrickAdvisor(request_json, user_targets)
         
         # Esegue tutti i controlli
         report = advisor.run_full_analysis()

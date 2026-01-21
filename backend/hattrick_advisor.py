@@ -6,7 +6,7 @@ class HattrickAdvisor:
     Supporta target specifici per U21 e Nazionale Maggiore (NT).
     """
 
-    def __init__(self, data):
+    def __init__(self, data, user_targets=None):
         """
         :param data: JSON payload contenente:
                      - last_update (str)
@@ -17,12 +17,13 @@ class HattrickAdvisor:
                      - current_skills (dict): { "playmaking": 10, ... }
                      - training_type (str)
                      - stamina_share (int)
+        :param user_targets: Lista di dizionari con i target utente (opzionale)
         """
         self.data = data
         
         # Normalizzazione input
         self.role = self.data.get("player_role", "").lower()
-        self.target_level = self.data.get("team_target", "U21").upper() # U21 o NT
+        self.target_level = self.data.get("team_target", "U21") # Rimosso .upper() per supportare custom case-sensitive
         self.variant = self.data.get("role_variant", "Normal")
         
         # --- DATABASE TARGET (Basato sui tuoi dati) ---
@@ -81,6 +82,36 @@ class HattrickAdvisor:
                 }
             }
         }
+
+        # Merge User Targets
+        if user_targets:
+            self.merge_user_targets(user_targets)
+
+    def merge_user_targets(self, user_targets):
+        """
+        Unisce i target utente a quelli di default.
+        Struttura user_target attesa:
+        {
+            "role": "midfielder",
+            "name": "MyU21",
+            "variant": "Normal",
+            "stats": { ... }
+        }
+        """
+        for t in user_targets:
+            role = t.get('role', '').lower()
+            name = t.get('name', 'Custom')
+            variant = t.get('variant', 'Normal')
+            stats = t.get('stats', {})
+
+            if role not in self.TARGETS:
+                self.TARGETS[role] = {}
+            
+            if name not in self.TARGETS[role]:
+                self.TARGETS[role][name] = {}
+            
+            # Sovrascrittura o aggiunta variante
+            self.TARGETS[role][name][variant] = stats
 
     # ---------------------------------------------------------
     # 1. UPDATE CHECK
