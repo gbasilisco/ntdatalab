@@ -3,7 +3,7 @@
     "TITLE": "Benvenuto",
     "DESCRIPTION": "Questa è la home page"
   },
-   "MENU": {
+  "MENU": {
     "MANAGELIST": "Gestione liste",
     "MAKEPORTALLINK": "Portal Link Generator"
   },
@@ -21,8 +21,7 @@
     "H3": "Login",
     "DESC": "Per poter accedere alle funzionalità, è necessario autenticarsi con google.",
     "SUBMIT": "Accedi con Google"
-  }
-  ,
+  },
   "MAKEPORTALLINK": {
     "H3": "Genera link a Portal",
     "DESC": "Vai al profilo"
@@ -49,5 +48,21 @@
     "STAFF_INADEQUATE": "❌ Staff allenatore non adeguato",
     "WARNING_STATUS": "⚠️",
     "MARKET_AVAILABLE": "❌ Sul mercato"
+  },
+  "MANAGE_TARGETS": {
+    "TITLE": "Gestione Target",
+    "NEW_TARGET": "Nuovo Target",
+    "EDIT_TARGET": "Modifica Target",
+    "ROLE": "Ruolo",
+    "NAME": "Nome (es. U21, NT)",
+    "VARIANT": "Variante (es. Normal, PNF)",
+    "SKILLS": "Skills Base",
+    "SAVE": "Salva Target",
+    "SAVING": "Salvataggio...",
+    "CANCEL": "Annulla",
+    "YOUR_TARGETS": "I tuoi Target",
+    "EDIT": "Modifica",
+    "DELETE": "Elimina",
+    "CONFIRM_DELETE": "Sei sicuro di voler eliminare questo target?"
   }
 }

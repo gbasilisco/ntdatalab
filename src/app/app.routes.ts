@@ -7,9 +7,14 @@ import { ContactComponent } from './contact/contact.component';
 import { MakePortalLinkComponent } from './make-portal-link/make-portal-link.component';
 
 export const routes: Routes = [
-    { path: 'player', component: PlayerDetailsComponent, canActivate: [authGuard]},
-     { path: 'login', component: LoginComponent},
-     { path: 'about', component: AboutComponent},
-     { path: 'contact', component: ContactComponent},
-      { path: 'make-portal-link', component: MakePortalLinkComponent}
+    { path: 'player', component: PlayerDetailsComponent, canActivate: [authGuard] },
+    { path: 'login', component: LoginComponent },
+    { path: 'about', component: AboutComponent },
+    { path: 'contact', component: ContactComponent },
+    { path: 'make-portal-link', component: MakePortalLinkComponent },
+    {
+        path: 'manage-targets',
+        loadComponent: () => import('./manage-targets/manage-targets.component').then(m => m.ManageTargetsComponent),
+        canActivate: [authGuard]
+    }
 ];

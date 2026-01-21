@@ -1,0 +1,63 @@
+<div class="container">
+    <h2>Gestione Target</h2>
+
+    <div class="card-form">
+        <h3>{{ newTarget.id ? 'Modifica Target' : 'Nuovo Target' }}</h3>
+
+        <div class="form-group">
+            <label>Ruolo:</label>
+            <select [(ngModel)]="newTarget.role">
+                <option *ngFor="let r of availableRoles" [value]="r.value">{{ r.label }}</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Nome (es. U21, NT):</label>
+            <input type="text" [(ngModel)]="newTarget.name" placeholder="Nome Target">
+        </div>
+
+        <div class="form-group">
+            <label>Variante (es. Normal, PNF):</label>
+            <input type="text" [(ngModel)]="newTarget.variant" placeholder="Variante">
+        </div>
+
+        <h4>Skills Base</h4>
+        <div class="skills-grid">
+            <div class="skill-item" *ngFor="let skill of availableStats">
+                <label>{{ skill | titlecase }}:</label>
+                <input type="number" [(ngModel)]="newTarget.stats[skill]" min="0" step="0.5">
+            </div>
+        </div>
+
+        <div class="actions">
+            <button (click)="saveTarget()" [disabled]="isLoading">
+                {{ isLoading ? 'Salvataggio...' : 'Salva Target' }}
+            </button>
+            <button (click)="resetForm()" class="btn-cancel" *ngIf="newTarget.id">Annulla Modifica</button>
+        </div>
+    </div>
+
+    <hr>
+
+    <h3>I tuoi Target</h3>
+    <div *ngIf="isLoading && !targets.length">Caricamento...</div>
+
+    <div class="targets-list" *ngIf="!isLoading">
+        <div class="target-item" *ngFor="let t of targets">
+            <div class="target-info">
+                <strong>{{ t.role | uppercase }}</strong> - {{ t.name }} ({{ t.variant }})
+                <div class="target-stats">
+                    <span *ngFor="let s of t.stats | keyvalue">
+                        <ng-container *ngIf="s.value > 0">
+                            {{ s.key }}: {{ s.value }} |
+                        </ng-container>
+                    </span>
+                </div>
+            </div>
+            <div class="target-actions">
+                <button (click)="editTarget(t)">Modifica</button>
+                <button (click)="deleteTarget(t.id)" class="btn-danger">Elimina</button>
+            </div>
+        </div>
+    </div>
+</div>
