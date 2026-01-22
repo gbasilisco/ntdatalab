@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,10 +12,19 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class LoginComponent {
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   login() {
-    this.authService.loginWithGoogle();
+    this.authService
+      .loginWithGoogle()
+      .then(() => this.router.navigate(['/player']))
+      .catch((err) => {
+        // keep console logging minimal; UI messaging can be added later if needed
+        console.error('Login failed', err);
+      });
   }
 
 }

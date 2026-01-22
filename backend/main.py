@@ -74,12 +74,25 @@ def analyze_player(request):
             elif method == 'set_role':
                 target_email = request_json.get('targetEmail')
                 new_role = request_json.get('newRole')
-                result = manager.set_role(requester, target_email, new_role)
+                team_name = request_json.get('teamName')
+                team_type = request_json.get('teamType')
+                result = manager.set_role(requester, target_email, new_role, team_name, team_type)
+                
+                if 'error' in result:
+                     return (result, 400, headers)
+                     
                 return (result, 200, headers)
                 
             elif method == 'get_all':
                 users = manager.get_all_users(requester)
                 return ({"users": users}, 200, headers)
+
+            elif method == 'get_coach_teams':
+                # Use TeamManager directly or via RoleManager
+                from firebase import TeamManager
+                tm = TeamManager()
+                teams = tm.get_coach_teams(requester)
+                return ({"teams": teams}, 200, headers)
             
             else:
                  return ({"error": "Metodo role non valido"}, 400, headers)
@@ -91,7 +104,7 @@ def analyze_player(request):
             email = request_json.get('email') # Requester
             
             if method == 'get_lists':
-                lists = manager.get_lists()
+                lists = manager.get_lists(email)
                 return ({"lists": lists}, 200, headers)
                 
             elif method == 'create_list':
