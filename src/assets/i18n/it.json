@@ -75,5 +75,43 @@
     "CONFIRM_DELETE": "Sei sicuro di voler eliminare questo target?",
     "LOADING": "Caricamento...",
     "NO_TARGETS": "Nessun target creato."
+  },
+  "MANAGE_LIST": {
+    "TITLE": "Gestione Liste",
+    "NEW_LIST": "Nuova Lista",
+    "PLACEHOLDER_NAME": "Nome Lista",
+    "CREATE_BUTTON": "Crea",
+    "EXISTING_LISTS": "Liste Esistenti",
+    "LOADING": "Caricamento...",
+    "NO_LISTS": "Nessuna lista presente.",
+    "OWNER": "Proprietario",
+    "PLAYERS_BUTTON": "Giocatori",
+    "DELETE_BUTTON": "Elimina"
+  },
+  "MANAGE_PLAYER": {
+    "TITLE": "Gestione Giocatori della Lista",
+    "BACK_BUTTON": "Indietro alle Liste",
+    "ADD_PLAYER_TITLE": "Aggiungi Giocatore",
+    "PLACEHOLDER_ID": "ID Giocatore",
+    "ADD_BUTTON": "Aggiungi",
+    "PLAYERS_IN_LIST_TITLE": "Giocatori in Lista",
+    "LOADING": "Caricamento...",
+    "NO_PLAYERS": "Nessun giocatore in questa lista.",
+    "PORTAL_LINK": "Portal Link",
+    "REMOVE_BUTTON": "Rimuovi"
+  },
+  "MANAGE_ROLES": {
+    "TITLE": "Gestione Ruoli (Coach Only)",
+    "ASSIGN_ROLE_TITLE": "Assegna Ruolo",
+    "USER_EMAIL_LABEL": "Email Utente",
+    "PLACEHOLDER_EMAIL": "user@example.com",
+    "ROLE_LABEL": "Ruolo",
+    "TEAM_NAME_TYPE_LABEL": "Nome Team & Tipo",
+    "NEW_TEAM_CHECKBOX": "Nuovo Team?",
+    "SELECT_EXISTING_TEAM": "Seleziona un team esistente",
+    "PLACEHOLDER_TEAM_NAME": "Nome Team (es. Italia)",
+    "ASSIGN_BUTTON": "Assegna",
+    "USERS_ROLES_TITLE": "Utenti e Ruoli",
+    "LOADING": "Caricamento..."
   }
 }

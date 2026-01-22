@@ -1,0 +1,31 @@
+<div class="container">
+    <h2>{{ 'MANAGE_PLAYER.TITLE' | translate }}</h2>
+    <a routerLink="/manage-lists" class="btn-back">{{ 'MANAGE_PLAYER.BACK_BUTTON' | translate }}</a>
+
+    <div class="card-form">
+        <h3>{{ 'MANAGE_PLAYER.ADD_PLAYER_TITLE' | translate }}</h3>
+        <div class="add-row">
+            <input [(ngModel)]="newPlayerId" [placeholder]="'MANAGE_PLAYER.PLACEHOLDER_ID' | translate" />
+            <button (click)="addPlayer()" [disabled]="!newPlayerId">{{ 'MANAGE_PLAYER.ADD_BUTTON' | translate
+                }}</button>
+        </div>
+    </div>
+
+    <div class="card-form" style="margin-top: 20px;">
+        <h3>{{ 'MANAGE_PLAYER.PLAYERS_IN_LIST_TITLE' | translate }}</h3>
+        <div *ngIf="isLoading">{{ 'MANAGE_PLAYER.LOADING' | translate }}</div>
+        <div *ngIf="!isLoading && players.length === 0">{{ 'MANAGE_PLAYER.NO_PLAYERS' | translate }}</div>
+
+        <ul *ngIf="!isLoading">
+            <li *ngFor="let p of players" class="player-item">
+                <span>
+                    <strong>{{ p.player_id }}</strong>
+                    <a [href]="'https://hattrickportal.online/Tracker/Player.aspx?playerID=' + p.player_id"
+                        target="_blank" style="margin-left: 10px;">{{ 'MANAGE_PLAYER.PORTAL_LINK' | translate }}</a>
+                </span>
+                <button class="btn-danger btn-sm" (click)="removePlayer(p.player_id)">{{ 'MANAGE_PLAYER.REMOVE_BUTTON' |
+                    translate }}</button>
+            </li>
+        </ul>
+    </div>
+</div>

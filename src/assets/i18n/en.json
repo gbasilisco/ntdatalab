@@ -75,5 +75,43 @@
     "CONFIRM_DELETE": "Are you sure you want to delete this target?",
     "LOADING": "Loading...",
     "NO_TARGETS": "No targets created."
+  },
+  "MANAGE_LIST": {
+    "TITLE": "List Management",
+    "NEW_LIST": "New List",
+    "PLACEHOLDER_NAME": "List Name",
+    "CREATE_BUTTON": "Create",
+    "EXISTING_LISTS": "Existing Lists",
+    "LOADING": "Loading...",
+    "NO_LISTS": "No lists found.",
+    "OWNER": "Owner",
+    "PLAYERS_BUTTON": "Players",
+    "DELETE_BUTTON": "Delete"
+  },
+  "MANAGE_PLAYER": {
+    "TITLE": "Manage List Players",
+    "BACK_BUTTON": "Back to Lists",
+    "ADD_PLAYER_TITLE": "Add Player",
+    "PLACEHOLDER_ID": "Player ID",
+    "ADD_BUTTON": "Add",
+    "PLAYERS_IN_LIST_TITLE": "Players in List",
+    "LOADING": "Loading...",
+    "NO_PLAYERS": "No players in this list.",
+    "PORTAL_LINK": "Portal Link",
+    "REMOVE_BUTTON": "Remove"
+  },
+  "MANAGE_ROLES": {
+    "TITLE": "Role Management (Coach Only)",
+    "ASSIGN_ROLE_TITLE": "Assign Role",
+    "USER_EMAIL_LABEL": "User Email",
+    "PLACEHOLDER_EMAIL": "user@example.com",
+    "ROLE_LABEL": "Role",
+    "TEAM_NAME_TYPE_LABEL": "Team Name & Type",
+    "NEW_TEAM_CHECKBOX": "New Team?",
+    "SELECT_EXISTING_TEAM": "Select existing team",
+    "PLACEHOLDER_TEAM_NAME": "Team Name (e.g. Italy)",
+    "ASSIGN_BUTTON": "Assign",
+    "USERS_ROLES_TITLE": "Users and Roles",
+    "LOADING": "Loading..."
   }
 }

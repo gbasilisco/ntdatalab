@@ -1,0 +1,66 @@
+<div class="container">
+    <h2>{{ 'MANAGE_ROLES.TITLE' | translate }}</h2>
+
+    <div class="card-form">
+        <h3>{{ 'MANAGE_ROLES.ASSIGN_ROLE_TITLE' | translate }}</h3>
+        <div class="form-group">
+            <label>{{ 'MANAGE_ROLES.USER_EMAIL_LABEL' | translate }}</label>
+            <input [(ngModel)]="targetEmail" [placeholder]="'MANAGE_ROLES.PLACEHOLDER_EMAIL' | translate" />
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'MANAGE_ROLES.ROLE_LABEL' | translate }}</label>
+            <select [(ngModel)]="selectedRole">
+                <option value="coach">Coach</option>
+                <option value="assistant">Assistant</option>
+                <option value="scout">Scout</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>{{ 'MANAGE_ROLES.TEAM_NAME_TYPE_LABEL' | translate }}</label>
+
+            <div style="margin-bottom: 10px;">
+                <label>
+                    <input type="checkbox" [(ngModel)]="isNewTeam"> {{ 'MANAGE_ROLES.NEW_TEAM_CHECKBOX' | translate }}
+                </label>
+            </div>
+
+            <!-- Selezione Esistente -->
+            <div *ngIf="!isNewTeam">
+                <select [(ngModel)]="selectedExistingTeamId" (change)="onExistingTeamChange()">
+                    <option value="" disabled>{{ 'MANAGE_ROLES.SELECT_EXISTING_TEAM' | translate }}</option>
+                    <option *ngFor="let t of existingTeams" [value]="t.id">
+                        {{ t.type }} - {{ t.name }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Creazione Nuovo -->
+            <div *ngIf="isNewTeam" style="display: flex; gap: 10px;">
+                <select [(ngModel)]="teamType" style="width: 80px;">
+                    <option value="NT">NT</option>
+                    <option value="U21">U21</option>
+                </select>
+                <input [(ngModel)]="teamName" [placeholder]="'MANAGE_ROLES.PLACEHOLDER_TEAM_NAME' | translate"
+                    style="flex:1;" />
+            </div>
+        </div>
+
+        <button (click)="assignRole()" [disabled]="!targetEmail">{{ 'MANAGE_ROLES.ASSIGN_BUTTON' | translate }}</button>
+        <p *ngIf="message" style="margin-top: 10px; font-weight: bold;">{{ message }}</p>
+    </div>
+
+    <div class="card-form" style="margin-top: 20px;">
+        <h3>{{ 'MANAGE_ROLES.USERS_ROLES_TITLE' | translate }}</h3>
+        <div *ngIf="isLoading">{{ 'MANAGE_ROLES.LOADING' | translate }}</div>
+        <ul *ngIf="!isLoading">
+            <li *ngFor="let user of users" style="padding: 5px 0; border-bottom: 1px solid #eee;">
+                <strong>{{ user.email }}</strong>: <span class="badge">{{ user.role }}</span>
+                <span *ngIf="user.team_name" style="margin-left: 10px; color: #666;">
+                    ({{ user.team_type }} {{ user.team_name }})
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
