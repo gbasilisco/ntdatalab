@@ -1,30 +1,20 @@
 <div class="topnav" id="myTopnav">
+  <!-- User Menu -->
   <a href="#home" class="active"><img src="../assets/img/icons/common/LogoNT_mini.png"></a>
   <a href="player">{{ 'MENU.MANAGELIST' | translate }}</a>
+  <a href="manage-lists">{{ 'MENU.MYLIST' | translate }}</a>
   <a href="manage-targets">{{ 'MENU.MANAGE_TARGETS' | translate }}</a>
   <a href="make-portal-link">{{ 'MENU.MAKEPORTALLINK' | translate }}</a>
+
   <a href="contact">Contact</a>
   <a href="about">About</a>
+
+  <!-- Language Menu -->
   <button (click)="changeLanguage('it')">IT</button>
   <button (click)="changeLanguage('en')">EN</button>
 
-
-  <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-    <i class="fa fa-bars"></i>
-  </a>
 </div>
 
 <div style="padding-left:16px">
   <router-outlet></router-outlet>
 </div>
-
-<script>
-  function myFunction() {
-    var x = document.getElementById("myTopnav");
-    if (x.className === "topnav") {
-      x.className += " responsive";
-    } else {
-      x.className = "topnav";
-    }
-  }
-</script>

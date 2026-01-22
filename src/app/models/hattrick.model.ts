@@ -16,6 +16,7 @@ export interface HattrickCsvRow {
   LastScoutNote: string;
   TransferListed: string;
   TeamTrainerSkill: string;
+  OwningUserID: string;
   /* OLD
   SkillKeeper: string;
   SkillPlaymaker: string;
@@ -26,7 +27,7 @@ export interface HattrickCsvRow {
   SkillSetPieces: string;
   */
 
-// --- NOMI COLONNE CORRETTI ---
+  // --- NOMI COLONNE CORRETTI ---
   KeeperSkill: string;      // Prima era SkillKeeper
   PlaymakerSkill: string;   // Prima era SkillPlaymaker
   ScorerSkill: string;      // Prima era SkillScorer
@@ -103,11 +104,12 @@ export interface PlayerResult {
   trainingType?: string;
   stamina?: number;
   lastUpdate?: string; // <--- NUOVO CAMPO
-  age?:string;
-  ageDays?:string;
-  lastScoutNote?:string;
-  transferListed?:string;
+  age?: string;
+  ageDays?: string;
+  lastScoutNote?: string;
+  transferListed?: string;
   teamTrainerSkill?: string;
+  owningUserID?: string;
   // -----------------------------------
   analysis?: AnalysisResponse;
   error?: string;

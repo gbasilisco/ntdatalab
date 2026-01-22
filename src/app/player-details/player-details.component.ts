@@ -157,7 +157,8 @@ export class PlayerDetailsComponent implements OnInit {
         ageDays: row.AgeDays,
         lastScoutNote: row.LastScoutNote,
         transferListed: row.TransferListed,
-        teamTrainerSkill: row.TeamTrainerSkill
+        teamTrainerSkill: row.TeamTrainerSkill,
+        owningUserID: row.OwningUserID
       };
 
       this.playerResults.push(playerEntry);

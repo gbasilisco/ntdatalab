@@ -1,7 +1,7 @@
 <div class="container">
-
+  <h2>{{ 'PLAYER_DETAIL.TITLE' | translate }}</h2>
   <div class="card-form">
-    <h3>{{ 'PLAYER_DETAIL.TITLE' | translate }}</h3>
+
     <p class="text-muted mb-4">{{ 'PLAYER_DETAIL.DESCRIPTION' | translate }}</p>
 
     <div class="form-row">
@@ -71,7 +71,12 @@
                 <strong>
                   <a href="https://hattrickportal.online/Tracker/Player.aspx?playerID={{ p.id }}"
                     target="_portal{{ p.id }}">
-                    ({{ p.id }})
+                    Portal link
+                  </a>
+                  <br>
+                  <a href="https://www.hattrick.org/goto.ashx?path=/MyHattrick/Inbox/?actionType=newMail%26userid={{ p.owningUserID }}"
+                    target="_portal{{ p.owningUserID }}">
+                    HT Mail
                   </a>
                 </strong>
               </small>

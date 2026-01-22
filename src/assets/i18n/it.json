@@ -4,9 +4,10 @@
     "DESCRIPTION": "Questa è la home page"
   },
   "MENU": {
-    "MANAGELIST": "Gestione liste",
+    "MANAGELIST": "Check Lista",
     "MAKEPORTALLINK": "Portal Link Generator",
-    "MANAGE_TARGETS": "Gestione Target"
+    "MANAGE_TARGETS": "Gestione Target",
+    "MYLIST": "Gestione Liste"
   },
   "CONTACT": {
     "H3": "Contattaci",
@@ -28,7 +29,7 @@
     "DESC": "Vai al profilo"
   },
   "PLAYER_DETAIL": {
-    "TITLE": "Gestione Liste",
+    "TITLE": "Check lista",
     "DESCRIPTION": "Seleziona come vuoi analizzare i giocatori e carica il file CSV della lista da analizzare.",
     "ROLE_LABEL": "Analizza come Ruolo:",
     "TARGET_TEAM_LABEL": "Target Team:",
