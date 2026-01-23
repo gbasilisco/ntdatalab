@@ -205,21 +205,30 @@ class RoleManager:
     
     def get_managed_league_ids(self, email):
         """
-        Ritorna la lista dei TeamID (corrispondenti alle LeagueID nazionali) 
-        che l'utente può gestire.
+        Ritorna la lista delle NativeLeagueID che l'utente può gestire.
         """
         owned_teams = self.team_manager.get_coach_teams(email)
         memberships = self.membership_manager.get_user_memberships(email)
         
-        managed_ids = set()
+        managed_league_ids = set()
+        
+        # 1. Team owned
         for t in owned_teams:
-            managed_ids.add(str(t['id'])) # Assicuriamoci che siano stringhe per confronto
+            nlid = t.get('NativeLeagueID')
+            if nlid:
+                managed_league_ids.add(str(nlid))
+        
+        # 2. Memberships
         for m in memberships:
             tid = m.get('team_id')
             if tid:
-                managed_ids.add(str(tid))
+                team_doc = db.collection('teams').document(tid).get()
+                if team_doc.exists:
+                    nlid = team_doc.to_dict().get('NativeLeagueID')
+                    if nlid:
+                        managed_league_ids.add(str(nlid))
         
-        return list(managed_ids)
+        return list(managed_league_ids)
     
     def get_all_managed_users(self, requester_email):
         """Ritorna tutti gli utenti in tutti i team gestiti da questo coach."""
