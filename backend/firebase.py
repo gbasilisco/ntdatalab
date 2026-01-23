@@ -235,7 +235,7 @@ class RoleManager:
 class ListManager:
     def __init__(self):
         self.lists_coll = 'lists'
-        self.players_coll = 'players'
+        self.players_coll = 'players-details'
         self.role_manager = RoleManager()
     
     def _get_visible_team_ids(self, email):
