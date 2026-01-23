@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+  <FileName>playerdetails.xml</FileName>
+  <Version>3.1</Version>
+  <UserID>382035</UserID>
+  <FetchedDate>2026-01-23 13:59:52</FetchedDate>
+  <UserSupporterTier>none</UserSupporterTier>
+  <IsPlayingMatch>False</IsPlayingMatch>
+  <Player>
+    <PlayerID>498976827</PlayerID>
+    <FirstName>Þorsteinn</FirstName>
+    <NickName></NickName>
+    <LastName>Rafnarsson</LastName>
+    <PlayerNumber>14</PlayerNumber>
+    <PlayerCategoryID>0</PlayerCategoryID>
+    <OwnerNotes></OwnerNotes>
+    <Age>17</Age>
+    <AgeDays>98</AgeDays>
+    <NextBirthDay>2026-02-06 00:00:00</NextBirthDay>
+    <ArrivalDate>2025-11-14 10:28:00</ArrivalDate>
+    <PlayerForm>5</PlayerForm>
+    <Cards>1</Cards>
+    <InjuryLevel>-1</InjuryLevel>
+    <Statement></Statement>
+    <PlayerLanguage>Íslenska</PlayerLanguage>
+    <PlayerLanguageID>25</PlayerLanguageID>
+    <TrainerData />
+    <OwningTeam>
+      <TeamID>851634</TeamID>
+      <TeamName>Barakaldo FC 2012</TeamName>
+      <LeagueID>4</LeagueID>
+    </OwningTeam>
+    <Salary>4320</Salary>
+    <IsAbroad>True</IsAbroad>
+    <Agreeability>4</Agreeability>
+    <Aggressiveness>2</Aggressiveness>
+    <Honesty>3</Honesty>
+    <Experience>2</Experience>
+    <Loyalty>9</Loyalty>
+    <MotherClubBonus>False</MotherClubBonus>
+    <MotherClub>
+      <TeamID>2262621</TeamID>
+      <TeamName>FC Hafnarfjördur</TeamName>
+    </MotherClub>
+    <Leadership>3</Leadership>
+    <Specialty>2</Specialty>
+    <NativeCountryID>37</NativeCountryID>
+    <NativeLeagueID>38</NativeLeagueID>
+    <NativeLeagueName>Ísland</NativeLeagueName>
+    <TSI>3150</TSI>
+    <PlayerSkills>
+      <StaminaSkill>5</StaminaSkill>
+      <KeeperSkill>1</KeeperSkill>
+      <PlaymakerSkill>9</PlaymakerSkill>
+      <ScorerSkill>3</ScorerSkill>
+      <PassingSkill>4</PassingSkill>
+      <WingerSkill>3</WingerSkill>
+      <DefenderSkill>5</DefenderSkill>
+      <SetPiecesSkill>3</SetPiecesSkill>
+    </PlayerSkills>
+    <Caps>0</Caps>
+    <CapsU20>0</CapsU20>
+    <CareerGoals>1</CareerGoals>
+    <CareerHattricks>0</CareerHattricks>
+    <LeagueGoals>0</LeagueGoals>
+    <CupGoals>1</CupGoals>
+    <FriendliesGoals>0</FriendliesGoals>
+    <MatchesCurrentTeam>10</MatchesCurrentTeam>
+    <GoalsCurrentTeam>1</GoalsCurrentTeam>
+    <AssistsCurrentTeam>0</AssistsCurrentTeam>
+    <CareerAssists>0</CareerAssists>
+    <TransferListed>False</TransferListed>
+    <TransferDetails />
+  </Player>
+</HattrickData>

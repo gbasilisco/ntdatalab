@@ -465,6 +465,12 @@ class PlayerManager:
                     detail_res = requests.get(detail_url, timeout=5)
                     if detail_res.status_code == 200:
                         detail_root = ET.fromstring(detail_res.content)
+                        
+                        # UserID dalla radice dell'XML di dettaglio
+                        xml_user_id = detail_root.findtext('UserID')
+                        if xml_user_id:
+                            p_data['UserID'] = xml_user_id
+
                         player_detail = detail_root.find('Player')
                         if player_detail is not None:
                             # Mergia i campi del dettaglio
@@ -474,7 +480,9 @@ class PlayerManager:
                                     for skill in d_child:
                                         p_data[skill.tag] = skill.text
                                 elif d_child.tag == 'OwningTeam':
-                                    # Se servono info dal team proprietario (es. LeagueID)
+                                    # Info dal team proprietario
+                                    p_data['TeamID'] = d_child.findtext('TeamID')
+                                    p_data['TeamName'] = d_child.findtext('TeamName')
                                     p_data['OwningTeam_LeagueID'] = d_child.findtext('LeagueID')
                                 elif d_child.text:
                                     # Altri campi piatti (NativeLeagueID, NextBirthDay, etc.)
