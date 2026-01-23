@@ -590,22 +590,40 @@ class PlayerManager:
         if not managed_league_ids:
             return []
 
-        # Firestore non supporta bene il full-text search o case-insensitive LIKE.
-        # Per ora facciamo una query filtrata per nazione e poi filtriamo in memoria per nome.
-        # In produzione andrebbe usato Algolia o simili.
+        # Cerchiamo sia come stringa che come intero per sicurezza sui tipi in Firestore
+        search_ids = []
+        for lid in managed_league_ids:
+            search_ids.append(str(lid))
+            try:
+                search_ids.append(int(lid))
+            except:
+                pass
+        
+        # Eliminiamo duplicati e prepariamo batch da 30 (limite Firestore)
+        search_ids = list(set(search_ids))
         
         all_allowed_players = []
-        # Supportiamo fino a 30 nazioni (limite 'in' di Firestore)
-        for i in range(0, len(managed_league_ids), 30):
-            batch_ids = managed_league_ids[i:i+30]
-            docs = db.collection(self.players_coll).where('NativeLeagueID', 'in', batch_ids).stream()
-            for doc in docs:
+        for i in range(0, len(search_ids), 30):
+            batch = search_ids[i:i+30]
+            
+            # 1. Cerca per NativeLeagueID (usato nei dettagli completi)
+            docs_native = db.collection(self.players_coll).where('NativeLeagueID', 'in', batch).stream()
+            for doc in docs_native:
                 p = doc.to_dict()
                 p['id'] = doc.id
-                
-                # Filtro semplice per nome/cognome in memoria
-                full_name = f"{p.get('FirstName', '')} {p.get('LastName', '')}".lower()
-                if not query or query.lower() in full_name:
-                    all_allowed_players.append(p)
+                if p['id'] not in [ap['id'] for ap in all_allowed_players]:
+                    full_name = f"{p.get('FirstName', '')} {p.get('LastName', '')}".lower()
+                    if not query or query.lower() in full_name:
+                        all_allowed_players.append(p)
+
+            # 2. Cerca per CountryID (usato nei sync preliminari o import CSV)
+            docs_country = db.collection(self.players_coll).where('CountryID', 'in', batch).stream()
+            for doc in docs_country:
+                p = doc.to_dict()
+                p['id'] = doc.id
+                if p['id'] not in [ap['id'] for ap in all_allowed_players]:
+                    full_name = f"{p.get('FirstName', '')} {p.get('LastName', '')}".lower()
+                    if not query or query.lower() in full_name:
+                        all_allowed_players.append(p)
                     
         return all_allowed_players
