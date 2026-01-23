@@ -66,33 +66,25 @@ def analyze_player(request):
             method = request_json.get('method')
             requester = request_json.get('requesterEmail')
             
-            if method == 'get_role':
+            if method == 'get_user_context':
                 email = request_json.get('email')
-                role = manager.get_role(email)
-                return ({"role": role}, 200, headers)
+                ctx = manager.get_user_context(email)
+                return (ctx, 200, headers)
 
             elif method == 'set_role':
                 target_email = request_json.get('targetEmail')
                 new_role = request_json.get('newRole')
-                team_name = request_json.get('teamName')
-                team_type = request_json.get('teamType')
-                result = manager.set_role(requester, target_email, new_role, team_name, team_type)
-                
-                if 'error' in result:
-                     return (result, 400, headers)
-                     
+                team_id = request_json.get('teamId')
+                result = manager.set_role(requester, target_email, new_role, team_id)
                 return (result, 200, headers)
                 
-            elif method == 'get_all':
-                users = manager.get_all_users(requester)
+            elif method == 'get_all_managed':
+                users = manager.get_all_managed_users(requester)
                 return ({"users": users}, 200, headers)
 
             elif method == 'get_coach_teams':
-                # Use TeamManager directly or via RoleManager
-                from firebase import TeamManager
-                tm = TeamManager()
-                teams = tm.get_coach_teams(requester)
-                return ({"teams": teams}, 200, headers)
+                ctx = manager.get_user_context(requester)
+                return ({"teams": ctx['owned_teams']}, 200, headers)
             
             else:
                  return ({"error": "Metodo role non valido"}, 400, headers)
@@ -109,7 +101,8 @@ def analyze_player(request):
                 
             elif method == 'create_list':
                 name = request_json.get('name')
-                result = manager.create_list(email, name)
+                team_id = request_json.get('teamId')
+                result = manager.create_list(email, name, team_id)
                 return (result, 200, headers)
                 
             elif method == 'delete_list':

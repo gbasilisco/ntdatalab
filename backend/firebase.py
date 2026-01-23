@@ -73,38 +73,8 @@ class TeamManager:
     def __init__(self):
         self.collection_name = 'teams'
 
-    def create_team(self, name, type, owner_email):
-        """
-        Crea un nuovo team.
-        ID = {type}_{name} (es. U21_Italia) per garantire unicità globale.
-        """
-        if not name or not type:
-            raise ValueError("Nome e Tipo team obbligatori.")
-        
-        team_id = f"{type}_{name}"
-        doc_ref = db.collection(self.collection_name).document(team_id)
-        
-        snapshot = doc_ref.get()
-        if snapshot.exists:
-            # Se esiste, controlliamo se l'owner è lo stesso
-            data = snapshot.to_dict()
-            if data.get('owner') == owner_email:
-                return {"status": "exists_owned", "team_id": team_id}
-            else:
-                raise ValueError(f"Il team {type} {name} esiste già ed è di un altro coach.")
-        
-        # Crea nuovo
-        data = {
-            'name': name,
-            'type': type,
-            'owner': owner_email,
-            'created_at': firestore.SERVER_TIMESTAMP
-        }
-        doc_ref.set(data)
-        return {"status": "created", "team_id": team_id}
-
     def get_coach_teams(self, coach_email):
-        """Ritorna i team creati da un coach."""
+        """Ritorna i team di cui l'utente è proprietario (Coach)."""
         docs = db.collection(self.collection_name).where('owner', '==', coach_email).stream()
         teams = []
         for doc in docs:
@@ -113,84 +83,103 @@ class TeamManager:
             teams.append(t)
         return teams
 
+    def is_coach_of(self, coach_email, team_id):
+        """Verifica se l'utente è il coach di uno specifico team."""
+        doc = db.collection(self.collection_name).document(team_id).get()
+        if not doc.exists:
+            return False
+        return doc.to_dict().get('owner') == coach_email
+
+    def is_any_coach(self, email):
+        """Verifica se l'utente è coach di almeno un team."""
+        docs = db.collection(self.collection_name).where('owner', '==', email).limit(1).stream()
+        for doc in docs:
+            return True
+        return False
+
+class MembershipManager:
+    def __init__(self):
+        self.collection_name = 'memberships'
+
+    def set_membership(self, email, team_id, role):
+        """Aggiunge o aggiorna l'appartenenza di un utente ad un team."""
+        # Usiamo un ID deterministico per evitare duplicati
+        membership_id = f"{email}_{team_id}"
+        data = {
+            'email': email,
+            'team_id': team_id,
+            'role': role,
+            'updated_at': firestore.SERVER_TIMESTAMP
+        }
+        db.collection(self.collection_name).document(membership_id).set(data)
+        return {"status": "success", "membership_id": membership_id}
+
+    def get_user_memberships(self, email):
+        """Ritorna tutti i team a cui l'utente appartiene (scout/assistant)."""
+        docs = db.collection(self.collection_name).where('email', '==', email).stream()
+        memberships = []
+        for doc in docs:
+            memberships.append(doc.to_dict())
+        return memberships
+
+    def get_team_members(self, team_id):
+        """Ritorna tutti i membri di uno specifico team."""
+        docs = db.collection(self.collection_name).where('team_id', '==', team_id).stream()
+        members = []
+        for doc in docs:
+            members.append(doc.to_dict())
+        return members
+
 class RoleManager:
     def __init__(self):
-        self.collection_name = 'users'
         self.team_manager = TeamManager()
+        self.membership_manager = MembershipManager()
 
-    def get_role_data(self, email):
-        """Recupera l'intero documento utente (ruolo, coach_email, team_name, team_type)."""
-        if not email:
-            return None
-        
-        docs = db.collection(self.collection_name).where('email', '==', email).limit(1).stream()
-        for doc in docs:
-            return doc.to_dict()
-        return None
-
-    def get_role(self, email):
-        """Recupera solo il ruolo."""
-        data = self.get_role_data(email)
-        return data.get('role') if data else None
-
-    def set_role(self, requester_email, target_email, new_role, team_name=None, team_type=None):
+    def get_user_context(self, email):
         """
-        Assegna un ruolo ad un utente.
-        Se presente team_name e team_type, crea/linka il team.
+        Ritorna il contesto completo dell'utente:
+        - I team di cui è Coach
+        - I team di cui è Membro (scout/assistant)
         """
-        if not self._is_coach(requester_email):
-            raise PermissionError("Solo un Coach può assegnare ruoli.")
+        owned_teams = self.team_manager.get_coach_teams(email)
+        memberships = self.membership_manager.get_user_memberships(email)
         
-        # Gestione Team
-        if team_name and team_type:
-            # Prova a creare o validare il team
-            try:
-                self.team_manager.create_team(team_name, team_type, requester_email)
-            except ValueError as e:
-                return {"error": str(e)}
+        # Arricchiamo le membership con le info del team (nome, tipo)
+        enriched_memberships = []
+        for m in memberships:
+            team_id = m.get('team_id')
+            team_doc = db.collection('teams').document(team_id).get()
+            if team_doc.exists:
+                m['team_info'] = team_doc.to_dict()
+                m['team_info']['id'] = team_doc.id
+            enriched_memberships.append(m)
         
-        # Trova o crea il documento per target_email
-        docs = db.collection(self.collection_name).where('email', '==', target_email).limit(1).stream()
-        target_doc_ref = None
-        for doc in docs:
-            target_doc_ref = doc.reference
-        
-        data = {
-            'email': target_email,
-            'role': new_role,
-            'coach_email': requester_email
+        return {
+            "owned_teams": owned_teams,
+            "memberships": enriched_memberships,
+            "is_any_coach": len(owned_teams) > 0
         }
-        if team_name:
-            data['team_name'] = team_name
-        if team_type:
-            data['team_type'] = team_type
 
-        if target_doc_ref:
-            target_doc_ref.set(data, merge=True)
-        else:
-            db.collection(self.collection_name).add(data)
+    def set_role(self, requester_email, target_email, new_role, team_id):
+        """
+        Assegna un ruolo (scout/assistant) ad un utente per un team specifico.
+        Solo l'owner del team può farlo.
+        """
+        if not self.team_manager.is_coach_of(requester_email, team_id):
+            raise PermissionError("Solo il Coach del team può assegnare ruoli per questo team.")
         
-        return {"status": "success", "email": target_email, "role": new_role, "coach": requester_email}
+        return self.membership_manager.set_membership(target_email, team_id, new_role)
     
-    def get_all_users(self, requester_email):
-        """
-        Ritorna gli utenti gestiti da questo coach.
-        """
-        if not self._is_coach(requester_email):
-            raise PermissionError("Accesso negato.")
-        
-        docs = db.collection(self.collection_name).where('coach_email', '==', requester_email).stream()
-        users = []
-        for doc in docs:
-            u = doc.to_dict()
-            u['id'] = doc.id
-            users.append(u)
-        return users
-
-    def _is_coach(self, email):
-        role = self.get_role(email)
-        return role == 'coach'
-
+    def get_all_managed_users(self, requester_email):
+        """Ritorna tutti gli utenti in tutti i team gestiti da questo coach."""
+        owned_teams = self.team_manager.get_coach_teams(requester_email)
+        all_members = []
+        for team in owned_teams:
+            members = self.membership_manager.get_team_members(team['id'])
+            for m in members:
+                m['team_info'] = team
+                all_members.append(m)
+        return all_members
 
 class ListManager:
     def __init__(self):
@@ -198,33 +187,22 @@ class ListManager:
         self.players_coll = 'players'
         self.role_manager = RoleManager()
     
-    def _get_team_id(self, email):
-        """
-        Determina l'ID del team (che è l'email del Coach).
-        - Se utente è Coach -> team_id = email
-        - Se utente è Assistant/Scout -> team_id = coach_email
-        - Altrimenti -> None (o email stessa se vogliamo fallback privati)
-        """
-        user_data = self.role_manager.get_role_data(email)
-        if not user_data:
-            return email # Fallback: se non ha ruolo, vede solo le sue cose private (o nulla)
-        
-        role = user_data.get('role')
-        if role == 'coach':
-            return email
-        elif role in ['assistant', 'scout']:
-            return user_data.get('coach_email')
-        
-        return email # Default fallback
+    def _get_visible_team_ids(self, email):
+        """Aggrega tutti i team_id a cui l'utente ha accesso."""
+        ctx = self.role_manager.get_user_context(email)
+        ids = [t['id'] for t in ctx['owned_teams']]
+        ids += [m['team_id'] for m in ctx['memberships']]
+        return list(set(ids))
 
     def get_lists(self, user_email):
-        """Ritorna tutte le liste visibili al team dell'utente."""
-        team_id = self._get_team_id(user_email)
-        if not team_id:
+        """Ritorna tutte le liste visibili all'utente (coach o membro)."""
+        team_ids = self._get_visible_team_ids(user_email)
+        if not team_ids:
             return []
 
-        # Query lists by team_id
-        docs = db.collection(self.lists_coll).where('team_id', '==', team_id).stream()
+        # Firestore limit: array_in supporta fino a 30 elementi.
+        # Se sono di più andrebbe divisa in più query, ma per ora assumiamo < 30.
+        docs = db.collection(self.lists_coll).where('team_id', 'in', team_ids).stream()
         lists = []
         for doc in docs:
             l = doc.to_dict()
@@ -232,26 +210,23 @@ class ListManager:
             lists.append(l)
         return lists
 
-    def create_list(self, user_email, name):
-        """Crea una nuova lista associata al team."""
-        if not name:
-            raise ValueError("Nome lista obbligatorio")
-        
-        team_id = self._get_team_id(user_email)
+    def create_list(self, user_email, name, team_id):
+        """Crea una nuova lista associata ad un team specifico di cui si ha accesso."""
+        team_ids = self._get_visible_team_ids(user_email)
+        if team_id not in team_ids:
+            raise PermissionError("Non hai permessi per creare liste in questo team.")
         
         data = {
             'name': name,
-            'owner': user_email,       # Chi l'ha creata fisicamente
-            'team_id': team_id,        # Il team a cui appartiene (chiave di visibilità)
+            'owner': user_email,
+            'team_id': team_id,
             'created_at': firestore.SERVER_TIMESTAMP
         }
         update_time, doc_ref = db.collection(self.lists_coll).add(data)
         return {"id": doc_ref.id, "status": "created", "team_id": team_id}
 
     def delete_list(self, user_email, list_id):
-        """Elimina una lista se appartiene al team dell'utente."""
-        team_id = self._get_team_id(user_email)
-        
+        """Elimina una lista se si ha accesso al team relativo."""
         doc_ref = db.collection(self.lists_coll).document(list_id)
         snapshot = doc_ref.get()
         
@@ -259,45 +234,34 @@ class ListManager:
             return {"status": "not_found"}
             
         data = snapshot.to_dict()
-        if data.get('team_id') != team_id:
-             raise PermissionError("Non puoi cancellare liste di un altro team.")
+        team_id = data.get('team_id')
+        
+        team_ids = self._get_visible_team_ids(user_email)
+        if team_id not in team_ids:
+             raise PermissionError("Non hai permessi su questa lista.")
 
         doc_ref.delete()
-        
-        # Opzionale: rimuovere ID lista dai giocatori batch
         return {"id": list_id, "status": "deleted"}
 
     def add_player(self, list_id, player_id):
-        """Aggiunge un ID giocatore ad una lista."""
-        # Qui potremmo controllare se la lista è accessibile, ma per brevità lasciamo
-        # che sia la UI a limitare o fidiamoci del list_id valido.
         player_ref = db.collection(self.players_coll).document(str(player_id))
-        
         player_ref.set({
             'list_ids': firestore.ArrayUnion([list_id])
         }, merge=True)
-        
         return {"status": "added"}
     
     def remove_player(self, list_id, player_id):
-        """Rimuove un ID giocatore da una lista."""
         player_ref = db.collection(self.players_coll).document(str(player_id))
-        
         player_ref.update({
             'list_ids': firestore.ArrayRemove([list_id])
         })
-        
         return {"status": "removed"}
     
     def get_list_players(self, list_id):
-        """Trova tutti i giocatori che appartengono a questa lista."""
         docs = db.collection(self.players_coll).where('list_ids', 'array_contains', list_id).stream()
         players = []
         for doc in docs:
             p = doc.to_dict()
             p['player_id'] = doc.id
-            if 'owningUserID' in p:
-                # Add owning user info if stored in player collection
-                 pass
             players.append(p)
         return players
