@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { PlayerDetailsComponent } from './player-details/player-details.component';
+import { CheckListComponent } from './check-list/check-list.component';
 import { authGuard } from './auth/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { AboutComponent } from './about/about.component';
@@ -11,7 +11,8 @@ import { ManageTargetsComponent } from './manage-targets/manage-targets.componen
 import { ManageListComponent } from './manage-list/manage-list.component';
 
 export const routes: Routes = [
-    { path: 'player', component: PlayerDetailsComponent, canActivate: [authGuard] },
+    { path: '', redirectTo: 'check-list', pathMatch: 'full' },
+    { path: 'check-list', component: CheckListComponent, canActivate: [authGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'about', component: AboutComponent },
     { path: 'contact', component: ContactComponent },
@@ -20,5 +21,4 @@ export const routes: Routes = [
     { path: 'manage-roles', component: ManageRolesComponent, canActivate: [authGuard] },
     { path: 'manage-targets', component: ManageTargetsComponent, canActivate: [authGuard] },
     { path: 'manage-lists', component: ManageListComponent, canActivate: [authGuard] }
-
 ];

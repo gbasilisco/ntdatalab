@@ -13,13 +13,13 @@ import { AuthService } from '../auth/auth.service';
 import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-player-details',
+  selector: 'app-check-list',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule, TranslateModule],
-  templateUrl: './player-details.component.html',
-  styleUrl: './player-details.component.css'
+  templateUrl: './check-list.component.html',
+  styleUrl: './check-list.component.css'
 })
-export class PlayerDetailsComponent implements OnInit {
+export class CheckListComponent implements OnInit {
 
   // --- CONFIGURAZIONE DROPDOWN ---
   targetOptions = ['U21', 'NT'];

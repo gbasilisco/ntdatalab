@@ -1,15 +1,15 @@
 <div class="topnav" id="myTopnav">
 
   <!-- User Menu -->
-  <a href="#home" class="active"><img src="../assets/img/icons/common/LogoNT_mini.png"></a>
-  <a href="player">{{ 'MENU.MANAGELIST' | translate }}</a>
-  <a href="manage-lists">{{ 'MENU.MYLIST' | translate }}</a>
-  <a href="manage-roles">Manage Roles</a>
-  <a href="manage-targets">{{ 'MENU.MANAGE_TARGETS' | translate }}</a>
-  <a href="make-portal-link">{{ 'MENU.MAKEPORTALLINK' | translate }}</a>
+  <a href="#home" class="logo"><img src="../assets/img/icons/common/LogoNT_mini.png"></a>
+  <a routerLink="/check-list" routerLinkActive="active">{{ 'MENU.MANAGELIST' | translate }}</a>
+  <a routerLink="/manage-lists" routerLinkActive="active">{{ 'MENU.MYLIST' | translate }}</a>
+  <a routerLink="/manage-roles" routerLinkActive="active">Manage Roles</a>
+  <a routerLink="/manage-targets" routerLinkActive="active">{{ 'MENU.MANAGE_TARGETS' | translate }}</a>
+  <a routerLink="/make-portal-link" routerLinkActive="active">{{ 'MENU.MAKEPORTALLINK' | translate }}</a>
 
-  <a href="contact">Contact</a>
-  <a href="about">About</a>
+  <a routerLink="/contact" routerLinkActive="active">Contact</a>
+  <a routerLink="/about" routerLinkActive="active">About</a>
 
   <!-- Language Menu -->
   <button (click)="changeLanguage('it')">IT</button>
