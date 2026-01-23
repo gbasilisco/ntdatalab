@@ -265,3 +265,62 @@ class ListManager:
             p['player_id'] = doc.id
             players.append(p)
         return players
+class PlayerManager:
+    def __init__(self):
+        self.players_coll = 'players-details'
+        self.list_manager = ListManager()
+
+    def get_list_players_detailed(self, user_email, list_id):
+        """
+        Ritorna i dettagli completi di tutti i giocatori in una lista.
+        """
+        # Rimosso il check sui permessi lista come richiesto
+        docs = db.collection(self.players_coll).where('list_ids', 'array_contains', list_id).stream()
+        players = []
+        for doc in docs:
+            p = doc.to_dict()
+            p['id'] = doc.id
+            players.append(p)
+        return players
+
+    def get_my_players(self, user_email):
+        """
+        Ritorna tutti i giocatori appartenenti all'utente (indipendente dalle liste).
+        """
+        if not user_email:
+            return []
+        docs = db.collection(self.players_coll).where('owner_email', '==', user_email).stream()
+        players = []
+        for doc in docs:
+            p = doc.to_dict()
+            p['id'] = doc.id
+            players.append(p)
+        return players
+
+    def get_player(self, user_email, player_id):
+        """
+        Ritorna i dettagli di un singolo giocatore.
+        """
+        doc_ref = db.collection(self.players_coll).document(str(player_id))
+        snapshot = doc_ref.get()
+        if not snapshot.exists:
+            return None
+        
+        player_data = snapshot.to_dict()
+        player_data['id'] = snapshot.id
+        # Rimosso check intersection con liste visibili
+        return player_data
+
+    def save_player(self, user_email, player_data):
+        """
+        Salva o aggiorna un giocatore assicurando il riferimento all'utente (owner_email).
+        """
+        player_id = str(player_data.get('PlayerID'))
+        if not player_id:
+            raise ValueError("PlayerID mancante.")
+        
+        player_data['owner_email'] = user_email
+        player_data['updated_at'] = firestore.SERVER_TIMESTAMP
+        
+        db.collection(self.players_coll).document(player_id).set(player_data, merge=True)
+        return {"id": player_id, "status": "saved"}

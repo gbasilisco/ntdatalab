@@ -1,6 +1,6 @@
 import functions_framework
 from hattrick_advisor import HattrickAdvisor
-from firebase import TargetManager, RoleManager, ListManager
+from firebase import TargetManager, RoleManager, ListManager, PlayerManager
 
 @functions_framework.http
 def analyze_player(request):
@@ -131,6 +131,34 @@ def analyze_player(request):
 
             else:
                  return ({"error": "Metodo list non valido"}, 400, headers)
+
+        # --- GESTIONE GIOCATORI ---
+        elif action == 'manage_players':
+            manager = PlayerManager()
+            method = request_json.get('method')
+            requester = request_json.get('requesterEmail')
+            
+            if method == 'get_list_players_detailed':
+                list_id = request_json.get('listId')
+                players = manager.get_list_players_detailed(requester, list_id)
+                return ({"players": players}, 200, headers)
+            
+            elif method == 'get_my_players':
+                players = manager.get_my_players(requester)
+                return ({"players": players}, 200, headers)
+            
+            elif method == 'get_player':
+                player_id = request_json.get('playerId')
+                player = manager.get_player(requester, player_id)
+                return ({"player": player}, 200, headers)
+
+            elif method == 'save_player':
+                player_data = request_json.get('playerData')
+                result = manager.save_player(requester, player_data)
+                return (result, 200, headers)
+            
+            else:
+                 return ({"error": "Metodo player non valido"}, 400, headers)
 
         # --- DEFAULT: ANALISI ---
         # Fetch user targets if email is available
