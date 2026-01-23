@@ -142,7 +142,7 @@ def analyze_player(request):
             elif method == 'add_player':
                 list_id = request_json.get('listId')
                 player_id = request_json.get('playerId')
-                result = manager.add_player(list_id, player_id)
+                result = manager.add_player(email, list_id, player_id)
                 return (result, 200, headers)
                 
             elif method == 'remove_player':
@@ -192,6 +192,11 @@ def analyze_player(request):
             elif method == 'sync_players':
                 result = manager.sync_players_from_mock(requester)
                 return (result, 200, headers)
+
+            elif method == 'search_players':
+                query = request_json.get('query', '')
+                result = manager.search_players(requester, query)
+                return ({"players": result}, 200, headers)
             
             else:
                  return ({"error": "Metodo player non valido"}, 400, headers)

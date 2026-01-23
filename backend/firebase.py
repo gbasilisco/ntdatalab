@@ -203,6 +203,24 @@ class RoleManager:
         
         return self.membership_manager.set_membership(target_email, team_id, new_role)
     
+    def get_managed_league_ids(self, email):
+        """
+        Ritorna la lista dei TeamID (corrispondenti alle LeagueID nazionali) 
+        che l'utente può gestire.
+        """
+        owned_teams = self.team_manager.get_coach_teams(email)
+        memberships = self.membership_manager.get_user_memberships(email)
+        
+        managed_ids = set()
+        for t in owned_teams:
+            managed_ids.add(str(t['id'])) # Assicuriamoci che siano stringhe per confronto
+        for m in memberships:
+            tid = m.get('team_id')
+            if tid:
+                managed_ids.add(str(tid))
+        
+        return list(managed_ids)
+    
     def get_all_managed_users(self, requester_email):
         """Ritorna tutti gli utenti in tutti i team gestiti da questo coach."""
         owned_teams = self.team_manager.get_coach_teams(requester_email)
@@ -276,8 +294,36 @@ class ListManager:
         doc_ref.delete()
         return {"id": list_id, "status": "deleted"}
 
-    def add_player(self, list_id, player_id):
+    def add_player(self, user_email, list_id, player_id):
+        """Aggiunge un giocatore ad una lista se l'utente ha i permessi sulla nazione del giocatore."""
+        # 1. Verifica accesso alla lista
+        doc_list = db.collection(self.lists_coll).document(list_id).get()
+        if not doc_list.exists:
+            return {"status": "error", "message": "Lista non trovata"}
+        
+        team_id = doc_list.to_dict().get('team_id')
+        team_ids = self._get_visible_team_ids(user_email)
+        if team_id not in team_ids:
+            raise PermissionError("Non hai permessi su questa lista.")
+
+        # 2. Verifica permessi sul giocatore (NativeLeagueID)
         player_ref = db.collection(self.players_coll).document(str(player_id))
+        player_snap = player_ref.get()
+        if not player_snap.exists:
+            return {"status": "error", "message": "Giocatore non trovato nel database."}
+        
+        player_data = player_snap.to_dict()
+        player_league_id = str(player_data.get('NativeLeagueID', ''))
+        
+        # Recuperiamo i league ID gestiti dall'utente
+        from firebase import RoleManager # Import locale per evitare circolarità se presente
+        role_mgr = RoleManager()
+        managed_league_ids = role_mgr.get_managed_league_ids(user_email)
+        
+        if player_league_id not in managed_league_ids:
+            raise PermissionError(f"Non hai i permessi per gestire giocatori della nazione {player_league_id}.")
+
+        # 3. Procedi con l'aggiunta
         player_ref.set({
             'list_ids': firestore.ArrayUnion([list_id])
         }, merge=True)
@@ -522,3 +568,35 @@ class PlayerManager:
         except Exception as e:
             print(f"Error during sync: {e}")
             return {"error": str(e)}
+
+    def search_players(self, user_email, query):
+        """
+        Cerca giocatori nella collection players-details filtrando per i league ID 
+        gestiti dall'utente.
+        """
+        from firebase import RoleManager
+        role_mgr = RoleManager()
+        managed_league_ids = role_mgr.get_managed_league_ids(user_email)
+        
+        if not managed_league_ids:
+            return []
+
+        # Firestore non supporta bene il full-text search o case-insensitive LIKE.
+        # Per ora facciamo una query filtrata per nazione e poi filtriamo in memoria per nome.
+        # In produzione andrebbe usato Algolia o simili.
+        
+        all_allowed_players = []
+        # Supportiamo fino a 30 nazioni (limite 'in' di Firestore)
+        for i in range(0, len(managed_league_ids), 30):
+            batch_ids = managed_league_ids[i:i+30]
+            docs = db.collection(self.players_coll).where('NativeLeagueID', 'in', batch_ids).stream()
+            for doc in docs:
+                p = doc.to_dict()
+                p['id'] = doc.id
+                
+                # Filtro semplice per nome/cognome in memoria
+                full_name = f"{p.get('FirstName', '')} {p.get('LastName', '')}".lower()
+                if not query or query.lower() in full_name:
+                    all_allowed_players.append(p)
+                    
+        return all_allowed_players
