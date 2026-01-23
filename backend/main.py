@@ -1,6 +1,6 @@
 import functions_framework
 from hattrick_advisor import HattrickAdvisor
-from firebase import TargetManager, RoleManager, ListManager, PlayerManager
+from firebase import TargetManager, RoleManager, ListManager, PlayerManager, UserManager
 
 @functions_framework.http
 def analyze_player(request):
@@ -37,8 +37,26 @@ def analyze_player(request):
     try:
         action = request_json.get('action')
         
+        # --- GESTIONE UTENTI (Profilo) ---
+        if action == 'manage_users':
+            manager = UserManager()
+            method = request_json.get('method')
+            email = request_json.get('email')
+            
+            if method == 'get_profile':
+                profile = manager.get_user_profile(email)
+                return ({"profile": profile}, 200, headers)
+            
+            elif method == 'update_profile':
+                profile_data = request_json.get('profile')
+                result = manager.update_user_profile(email, profile_data)
+                return (result, 200, headers)
+            
+            else:
+                 return ({"error": "Metodo user non valido"}, 400, headers)
+        
         # --- GESTIONE TARGET ---
-        if action == 'manage_targets':
+        elif action == 'manage_targets':
             manager = TargetManager()
             method = request_json.get('method') # get, save, delete
             email = request_json.get('email')

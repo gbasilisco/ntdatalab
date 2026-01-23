@@ -7,6 +7,35 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app()
 
 db = firestore.client()
+class UserManager:
+    def __init__(self):
+        self.collection_name = 'users'
+
+    def get_user_profile(self, email):
+        """Recupera il profilo utente (userid, team_ids) tramite email."""
+        if not email:
+            raise ValueError("Email mancante.")
+        
+        doc = db.collection(self.collection_name).document(email).get()
+        if not doc.exists:
+            return None
+        
+        return doc.to_dict()
+
+    def update_user_profile(self, email, profile_data):
+        """Crea o aggiorna il profilo utente. Aspetta userid e team_ids (list)."""
+        if not email:
+            raise ValueError("Email mancante.")
+        
+        # Pulizia dati
+        clean_data = {
+            'userid': str(profile_data.get('userid', '')),
+            'team_ids': profile_data.get('team_ids', []),
+            'updated_at': firestore.SERVER_TIMESTAMP
+        }
+        
+        db.collection(self.collection_name).document(email).set(clean_data, merge=True)
+        return {"status": "success", "email": email}
 
 class TargetManager:
     def __init__(self):
