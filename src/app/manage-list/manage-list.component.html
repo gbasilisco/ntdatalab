@@ -3,10 +3,17 @@
 
     <div class="card-form">
         <h3>{{ 'MANAGE_LIST.NEW_LIST' | translate }}</h3>
-        <div class="create-row">
-            <input [(ngModel)]="newListName" [placeholder]="'MANAGE_LIST.PLACEHOLDER_NAME' | translate" />
-            <button (click)="createList()" [disabled]="!newListName">{{ 'MANAGE_LIST.CREATE_BUTTON' | translate
-                }}</button>
+        <div class="create-row" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <select [(ngModel)]="selectedTeamId" style="flex: 1; min-width: 150px;">
+                <option value="" disabled>Seleziona Team</option>
+                <option *ngFor="let t of myTeams" [value]="t.id">
+                    {{ t.type }} - {{ t.name }}
+                </option>
+            </select>
+            <input [(ngModel)]="newListName" [placeholder]="'MANAGE_LIST.PLACEHOLDER_NAME' | translate"
+                style="flex: 2; min-width: 200px;" />
+            <button (click)="createList()" [disabled]="!newListName || !selectedTeamId">{{ 'MANAGE_LIST.CREATE_BUTTON' |
+                translate }}</button>
         </div>
     </div>
 
@@ -19,6 +26,7 @@
         <div *ngFor="let list of lists" class="list-item">
             <div>
                 <strong>{{ list.name }}</strong>
+                <span style="margin-left: 10px; font-size: 0.9em; color: #666;">({{ list.team_id }})</span>
                 <br>
                 <small class="text-muted">{{ 'MANAGE_LIST.OWNER' | translate }}: {{ list.owner }}</small>
             </div>

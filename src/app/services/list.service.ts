@@ -31,8 +31,8 @@ export class ListService {
     return this.getRequestPayload('get_lists');
   }
 
-  createList(name: string): Observable<any> {
-    return this.getRequestPayload('create_list', { name });
+  createList(name: string, teamId: string): Observable<any> {
+    return this.getRequestPayload('create_list', { name, teamId });
   }
 
   deleteList(listId: string): Observable<any> {

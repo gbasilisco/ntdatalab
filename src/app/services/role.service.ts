@@ -27,16 +27,18 @@ export class RoleService {
     );
   }
 
-  getRole(email: string): Observable<{ role: string }> {
-    return this.getRequestPayload('get_role', { email });
+  getUserContext(email?: string): Observable<any> {
+    const data: any = {};
+    if (email) data.email = email;
+    return this.getRequestPayload('get_user_context', data);
   }
 
-  setRole(targetEmail: string, newRole: string, teamName?: string, teamType?: string): Observable<any> {
-    return this.getRequestPayload('set_role', { targetEmail, newRole, teamName, teamType });
+  setRole(targetEmail: string, newRole: string, teamId: string): Observable<any> {
+    return this.getRequestPayload('set_role', { targetEmail, newRole, teamId });
   }
 
-  getAllUsers(): Observable<{ users: any[] }> {
-    return this.getRequestPayload('get_all');
+  getAllManagedUsers(): Observable<{ users: any[] }> {
+    return this.getRequestPayload('get_all_managed');
   }
 
   getCoachTeams(): Observable<{ teams: any[] }> {

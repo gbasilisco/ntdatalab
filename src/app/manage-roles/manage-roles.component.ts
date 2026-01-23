@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoleService } from '../services/role.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { COUNTRIES } from '../utils/countries';
 
 @Component({
   selector: 'app-manage-roles',
@@ -17,12 +18,7 @@ export class ManageRolesComponent implements OnInit {
 
   targetEmail: string = '';
   selectedRole: string = 'scout';
-
-  // Team Selection
-  teamName: string = '';
-  teamType: string = 'NT'; // NT or U21
-  isNewTeam: boolean = false;
-  selectedExistingTeamId: string = '';
+  selectedTeamId: string = '';
 
   isLoading = false;
   message = '';
@@ -36,12 +32,12 @@ export class ManageRolesComponent implements OnInit {
 
   loadUsers() {
     this.isLoading = true;
-    this.roleService.getAllUsers().subscribe({
-      next: (res) => {
+    this.roleService.getAllManagedUsers().subscribe({
+      next: (res: any) => {
         this.users = res.users;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.message = 'Errore caricamento utenti (Sei un Coach?)';
         this.isLoading = false;
@@ -51,42 +47,26 @@ export class ManageRolesComponent implements OnInit {
 
   loadTeams() {
     this.roleService.getCoachTeams().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.existingTeams = res.teams || [];
+        if (this.existingTeams.length > 0) {
+          this.selectedTeamId = this.existingTeams[0].id;
+        }
       },
-      error: (err) => console.error('Errore caricamento team', err)
+      error: (err: any) => console.error('Errore caricamento team', err)
     });
   }
 
-  onExistingTeamChange() {
-    const team = this.existingTeams.find(t => t.id === this.selectedExistingTeamId);
-    if (team) {
-      this.teamName = team.name;
-      this.teamType = team.type;
-    }
-  }
-
   assignRole() {
-    if (!this.targetEmail) return;
+    if (!this.targetEmail || !this.selectedTeamId) return;
 
-    // Se stiamo selezionando un team esistente, assicuriamoci che i valori siano sincronizzati
-    if (!this.isNewTeam && this.selectedExistingTeamId) {
-      this.onExistingTeamChange();
-    }
-
-    this.roleService.setRole(this.targetEmail, this.selectedRole, this.teamName, this.teamType).subscribe({
-      next: (res) => {
+    this.roleService.setRole(this.targetEmail, this.selectedRole, this.selectedTeamId).subscribe({
+      next: () => {
         this.message = `Ruolo ${this.selectedRole} assegnato a ${this.targetEmail}`;
         this.targetEmail = '';
         this.loadUsers();
-        // Ricarica team se ne abbiamo creato uno nuovo
-        if (this.isNewTeam) {
-          this.loadTeams();
-          this.isNewTeam = false;
-          this.teamName = '';
-        }
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         if (err.error && err.error.error) {
           this.message = 'Errore: ' + err.error.error;

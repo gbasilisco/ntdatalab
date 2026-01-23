@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ListService } from '../services/list.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { RoleService } from '../services/role.service';
 
 @Component({
   selector: 'app-manage-list',
@@ -15,22 +16,48 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ManageListComponent implements OnInit {
   lists: any[] = [];
   newListName = '';
+  selectedTeamId = '';
+  myTeams: any[] = [];
   isLoading = false;
 
-  constructor(private listService: ListService) { }
+  constructor(
+    private listService: ListService,
+    private roleService: RoleService
+  ) { }
 
   ngOnInit() {
     this.loadLists();
+    this.loadUserTeams();
+  }
+
+  loadUserTeams() {
+    this.roleService.getUserContext().subscribe({
+      next: (ctx: any) => {
+        const owned = ctx.owned_teams || [];
+        const memberships = ctx.memberships || [];
+
+        const memberTeams = memberships
+          .filter((m: any) => m.team_info)
+          .map((m: any) => m.team_info);
+
+        const allTeams = [...owned, ...memberTeams];
+        this.myTeams = Array.from(new Map(allTeams.map(t => [t.id, t])).values());
+
+        if (this.myTeams.length > 0 && !this.selectedTeamId) {
+          this.selectedTeamId = this.myTeams[0].id;
+        }
+      }
+    });
   }
 
   loadLists() {
     this.isLoading = true;
     this.listService.getLists().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.lists = res.lists;
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error(err);
         this.isLoading = false;
       }
@@ -38,14 +65,14 @@ export class ManageListComponent implements OnInit {
   }
 
   createList() {
-    if (!this.newListName) return;
+    if (!this.newListName || !this.selectedTeamId) return;
 
-    this.listService.createList(this.newListName).subscribe({
-      next: (res) => {
+    this.listService.createList(this.newListName, this.selectedTeamId).subscribe({
+      next: () => {
         this.newListName = '';
         this.loadLists();
       },
-      error: (err) => console.error(err)
+      error: (err: any) => console.error(err)
     });
   }
 
@@ -54,7 +81,7 @@ export class ManageListComponent implements OnInit {
 
     this.listService.deleteList(listId).subscribe({
       next: () => this.loadLists(),
-      error: (err) => console.error(err)
+      error: (err: any) => console.error(err)
     });
   }
 }
