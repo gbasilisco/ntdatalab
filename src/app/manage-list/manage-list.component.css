@@ -52,6 +52,19 @@ button:disabled {
     gap: 5px;
 }
 
+@media (max-width: 500px) {
+    .list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
 .btn-secondary {
     display: inline-block;
     padding: 8px 12px;

@@ -51,6 +51,27 @@ button:disabled {
     border-bottom: 1px solid #eee;
 }
 
+@media (max-width: 600px) {
+    .player-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .player-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .add-row {
+        flex-direction: column;
+    }
+
+    .add-row button {
+        width: 100%;
+    }
+}
+
 .player-info {
     display: flex;
     flex-direction: column;

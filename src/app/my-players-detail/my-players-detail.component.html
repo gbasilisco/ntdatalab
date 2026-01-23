@@ -11,35 +11,37 @@
     <div *ngIf="isLoading" class="loading">{{ 'MY_PLAYERS.LOADING' | translate }}</div>
     <div *ngIf="!isLoading && players.length === 0" class="no-data">{{ 'MY_PLAYERS.NO_PLAYERS' | translate }}</div>
 
-    <table class="player-table" *ngIf="!isLoading && players.length > 0">
-        <thead>
-            <tr>
-                <th>{{ 'MY_PLAYERS.TABLE.FIRSTNAME' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.LASTNAME' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.PLAYERID' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.AGE' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.DAYS' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.TSI' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.LEAGUEID' | translate }}</th>
-                <th>{{ 'MY_PLAYERS.TABLE.ACTION' | translate }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let p of players">
-                <td>{{ p.FirstName }}</td>
-                <td>{{ p.LastName }}</td>
-                <td>{{ p.PlayerID }}</td>
-                <td>{{ p.Age }}</td>
-                <td>{{ p.AgeDays }}</td>
-                <td>{{ p.TSI | number }}</td>
-                <td>{{ p.NativeLeagueID }}</td>
-                <td>
-                    <button class="btn-detail" (click)="selectPlayer(p)">{{ 'MY_PLAYERS.DETAIL_BUTTON' | translate
-                        }}</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="player-table" *ngIf="!isLoading && players.length > 0">
+            <thead>
+                <tr>
+                    <th>{{ 'MY_PLAYERS.TABLE.FIRSTNAME' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.LASTNAME' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.PLAYERID' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.AGE' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.DAYS' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.TSI' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.LEAGUEID' | translate }}</th>
+                    <th>{{ 'MY_PLAYERS.TABLE.ACTION' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let p of players">
+                    <td>{{ p.FirstName }}</td>
+                    <td>{{ p.LastName }}</td>
+                    <td>{{ p.PlayerID }}</td>
+                    <td>{{ p.Age }}</td>
+                    <td>{{ p.AgeDays }}</td>
+                    <td>{{ p.TSI | number }}</td>
+                    <td>{{ p.NativeLeagueID }}</td>
+                    <td>
+                        <button class="btn-detail" (click)="selectPlayer(p)">{{ 'MY_PLAYERS.DETAIL_BUTTON' | translate
+                            }}</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Dettaglio Giocatore (HT Style) -->
