@@ -156,6 +156,11 @@ def analyze_player(request):
                 player_data = request_json.get('playerData')
                 result = manager.save_player(requester, player_data)
                 return (result, 200, headers)
+
+            elif method == 'import_players':
+                players_list = request_json.get('players')
+                result = manager.import_players(requester, players_list)
+                return (result, 200, headers)
             
             else:
                  return ({"error": "Metodo player non valido"}, 400, headers)

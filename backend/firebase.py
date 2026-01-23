@@ -324,3 +324,38 @@ class PlayerManager:
         
         db.collection(self.players_coll).document(player_id).set(player_data, merge=True)
         return {"id": player_id, "status": "saved"}
+    def import_players(self, user_email, players_list):
+        """
+        Salva una lista di giocatori in batch (max 500 per batch).
+        """
+        if not players_list:
+            return {"status": "success", "count": 0}
+
+        # Firestore batch supports max 500 operations
+        batch = db.batch()
+        count = 0
+        total = 0
+        
+        for p in players_list:
+            player_id = str(p.get('PlayerID'))
+            if not player_id:
+                continue
+            
+            p['owner_email'] = user_email
+            p['updated_at'] = firestore.SERVER_TIMESTAMP
+            
+            doc_ref = db.collection(self.players_coll).document(player_id)
+            batch.set(doc_ref, p, merge=True)
+            
+            count += 1
+            total += 1
+            
+            if count == 500:
+                batch.commit()
+                batch = db.batch()
+                count = 0
+        
+        if count > 0:
+            batch.commit()
+            
+        return {"status": "success", "imported_count": total}
