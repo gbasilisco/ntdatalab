@@ -36,9 +36,12 @@ def analyze_player(request):
 
     try:
         action = request_json.get('action')
+        print(f"Backend triggered: action={action}")
+        print(f"Request payload: {request_json}")
         
         # --- GESTIONE UTENTI (Profilo) ---
         if action == 'manage_users':
+            print(f"DEBUG: manage_users called with request: {request_json}")
             manager = UserManager()
             method = request_json.get('method')
             email = request_json.get('email')
