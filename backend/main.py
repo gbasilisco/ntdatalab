@@ -188,6 +188,10 @@ def analyze_player(request):
                 players_list = request_json.get('players')
                 result = manager.import_players(requester, players_list)
                 return (result, 200, headers)
+
+            elif method == 'sync_players':
+                result = manager.sync_players_from_mock(requester)
+                return (result, 200, headers)
             
             else:
                  return ({"error": "Metodo player non valido"}, 400, headers)

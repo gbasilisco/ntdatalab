@@ -1,5 +1,9 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
+import requests
+import xml.etree.ElementTree as ET
+from datetime import datetime
+import pytz # Potrebbe servire per gestire le timezone se necessario, ma proviamo senza per ora se Hattrick è naive o UTC
 
 # Inizializza l'app Firebase solo se non è già stata inizializzata
 if not firebase_admin._apps:
@@ -418,3 +422,70 @@ class PlayerManager:
             batch.commit()
             
         return {"status": "success", "imported_count": total}
+
+    def sync_players_from_mock(self, user_email):
+        """
+        Sincronizza i giocatori chiamando il mock API e confrontando le date.
+        """
+        url = "https://nt-data-lab-705728164092.europe-west1.run.app/mock?file=players&version=2.7"
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code != 200:
+                print(f"Sync failed: mock returned {response.status_code}")
+                return {"error": f"Failed to fetch mock data: {response.status_code}"}
+            
+            root = ET.fromstring(response.content)
+            fetched_date_str = root.findtext('FetchedDate')
+            if not fetched_date_str:
+                return {"error": "FetchedDate non trovato nell'XML"}
+            
+            # Formato Hattrick: 2026-01-23 12:13:20
+            # Lo rendiamo aware per il confronto con Firestore. 
+            # Firestore in Python restituisce datetime objects aware (di solito UTC).
+            fetched_date = datetime.strptime(fetched_date_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.UTC)
+            
+            synced_ids = []
+            
+            # Troviamo tutti i giocatori nel file XML
+            for player_el in root.findall('.//Player'):
+                p_data = {}
+                for child in player_el:
+                    p_data[child.tag] = child.text
+                
+                player_id = p_data.get('PlayerID')
+                if not player_id:
+                    continue
+                
+                doc_ref = db.collection(self.players_coll).document(str(player_id))
+                snapshot = doc_ref.get()
+                
+                should_update = False
+                if not snapshot.exists:
+                    should_update = True
+                else:
+                    existing_data = snapshot.to_dict()
+                    updated_at = existing_data.get('updated_at')
+                    
+                    if updated_at:
+                        # Assicuriamoci che updated_at sia aware
+                        if hasattr(updated_at, 'tzinfo') and updated_at.tzinfo is None:
+                            updated_at = updated_at.replace(tzinfo=pytz.UTC)
+                        
+                        # Se FetchedDate è più recente di updated_at, facciamo l'update
+                        if fetched_date > updated_at:
+                            should_update = True
+                    else:
+                        should_update = True
+                
+                if should_update:
+                    p_data['owner_email'] = user_email
+                    p_data['updated_at'] = fetched_date
+                    p_data = self._clean_data(p_data)
+                    doc_ref.set(p_data, merge=True)
+                    synced_ids.append(player_id)
+            
+            return {"status": "success", "synced_count": len(synced_ids), "synced_ids": synced_ids}
+            
+        except Exception as e:
+            print(f"Error during sync: {e}")
+            return {"error": str(e)}
