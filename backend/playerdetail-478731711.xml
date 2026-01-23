@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+  <FileName>playerdetails.xml</FileName>
+  <Version>3.1</Version>
+  <UserID>382035</UserID>
+  <FetchedDate>2026-01-23 13:26:31</FetchedDate>
+  <UserSupporterTier>none</UserSupporterTier>
+  <IsPlayingMatch>False</IsPlayingMatch>
+  <Player>
+    <PlayerID>478731711</PlayerID>
+    <FirstName>Ivan</FirstName>
+    <NickName></NickName>
+    <LastName>Kadlec</LastName>
+    <PlayerNumber>21</PlayerNumber>
+    <PlayerCategoryID>0</PlayerCategoryID>
+    <OwnerNotes></OwnerNotes>
+    <Age>25</Age>
+    <AgeDays>1</AgeDays>
+    <NextBirthDay>2026-05-14 00:00:00</NextBirthDay>
+    <ArrivalDate>2025-12-24 17:06:00</ArrivalDate>
+    <PlayerForm>5</PlayerForm>
+    <Cards>0</Cards>
+    <InjuryLevel>-1</InjuryLevel>
+    <Statement></Statement>
+    <PlayerLanguage>Česky</PlayerLanguage>
+    <PlayerLanguageID>35</PlayerLanguageID>
+    <TrainerData />
+    <OwningTeam>
+      <TeamID>851634</TeamID>
+      <TeamName>Barakaldo FC 2012</TeamName>
+      <LeagueID>4</LeagueID>
+    </OwningTeam>
+    <Salary>93840</Salary>
+    <IsAbroad>True</IsAbroad>
+    <Agreeability>1</Agreeability>
+    <Aggressiveness>3</Aggressiveness>
+    <Honesty>1</Honesty>
+    <Experience>6</Experience>
+    <Loyalty>6</Loyalty>
+    <MotherClubBonus>False</MotherClubBonus>
+    <MotherClub>
+      <TeamID>897815</TeamID>
+      <TeamName>FK Radegast Strašnice</TeamName>
+    </MotherClub>
+    <Leadership>2</Leadership>
+    <Specialty>5</Specialty>
+    <NativeCountryID>46</NativeCountryID>
+    <NativeLeagueID>52</NativeLeagueID>
+    <NativeLeagueName>Česko</NativeLeagueName>
+    <TSI>76790</TSI>
+    <PlayerSkills>
+      <StaminaSkill>7</StaminaSkill>
+      <KeeperSkill>1</KeeperSkill>
+      <PlaymakerSkill>10</PlaymakerSkill>
+      <ScorerSkill>9</ScorerSkill>
+      <PassingSkill>9</PassingSkill>
+      <WingerSkill>13</WingerSkill>
+      <DefenderSkill>5</DefenderSkill>
+      <SetPiecesSkill>2</SetPiecesSkill>
+    </PlayerSkills>
+    <Caps>0</Caps>
+    <CapsU20>0</CapsU20>
+    <CareerGoals>33</CareerGoals>
+    <CareerHattricks>1</CareerHattricks>
+    <LeagueGoals>1</LeagueGoals>
+    <CupGoals>0</CupGoals>
+    <FriendliesGoals>0</FriendliesGoals>
+    <MatchesCurrentTeam>4</MatchesCurrentTeam>
+    <GoalsCurrentTeam>1</GoalsCurrentTeam>
+    <AssistsCurrentTeam>1</AssistsCurrentTeam>
+    <CareerAssists>14</CareerAssists>
+    <TransferListed>False</TransferListed>
+    <TransferDetails />
+  </Player>
+</HattrickData>

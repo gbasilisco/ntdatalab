@@ -425,37 +425,64 @@ class PlayerManager:
 
     def sync_players_from_mock(self, user_email):
         """
-        Sincronizza i giocatori chiamando il mock API e confrontando le date.
+        Sincronizza i giocatori chiamando il mock API (lista + dettagli individuali) 
+        e confrontando le date.
         """
-        url = "https://nt-data-lab-705728164092.europe-west1.run.app/mock?file=players&version=2.7"
+        base_url = "https://nt-data-lab-705728164092.europe-west1.run.app/mock"
+        list_url = f"{base_url}?file=players&version=2.7"
+        
         try:
-            response = requests.get(url, timeout=10)
+            # 1. Recupera la lista principale dei giocatori
+            response = requests.get(list_url, timeout=10)
             if response.status_code != 200:
-                print(f"Sync failed: mock returned {response.status_code}")
-                return {"error": f"Failed to fetch mock data: {response.status_code}"}
+                print(f"Sync failed: mock list returned {response.status_code}")
+                return {"error": f"Failed to fetch mock list: {response.status_code}"}
             
-            root = ET.fromstring(response.content)
-            fetched_date_str = root.findtext('FetchedDate')
+            root_list = ET.fromstring(response.content)
+            fetched_date_str = root_list.findtext('FetchedDate')
             if not fetched_date_str:
-                return {"error": "FetchedDate non trovato nell'XML"}
+                return {"error": "FetchedDate non trovato nell'XML della lista"}
             
             # Formato Hattrick: 2026-01-23 12:13:20
-            # Lo rendiamo aware per il confronto con Firestore. 
-            # Firestore in Python restituisce datetime objects aware (di solito UTC).
             fetched_date = datetime.strptime(fetched_date_str, '%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.UTC)
             
             synced_ids = []
             
-            # Troviamo tutti i giocatori nel file XML
-            for player_el in root.findall('.//Player'):
+            # 2. Cicla sui giocatori presenti nella lista
+            for player_el in root_list.findall('.//Player'):
                 p_data = {}
                 for child in player_el:
-                    p_data[child.tag] = child.text
+                    if child.text: # Salta tag vuoti o complessi non gestiti qui
+                        p_data[child.tag] = child.text
                 
                 player_id = p_data.get('PlayerID')
                 if not player_id:
                     continue
                 
+                # --- RECUPERO DETTAGLI INDIVIDUALI ---
+                detail_url = f"{base_url}?file=playerdetails&version=3.1&actionType=view&playerID={player_id}"
+                try:
+                    detail_res = requests.get(detail_url, timeout=5)
+                    if detail_res.status_code == 200:
+                        detail_root = ET.fromstring(detail_res.content)
+                        player_detail = detail_root.find('Player')
+                        if player_detail is not None:
+                            # Mergia i campi del dettaglio
+                            for d_child in player_detail:
+                                if d_child.tag == 'PlayerSkills':
+                                    # Appiattisce le skill (es. StaminaSkill, KeeperSkill)
+                                    for skill in d_child:
+                                        p_data[skill.tag] = skill.text
+                                elif d_child.tag == 'OwningTeam':
+                                    # Se servono info dal team proprietario (es. LeagueID)
+                                    p_data['OwningTeam_LeagueID'] = d_child.findtext('LeagueID')
+                                elif d_child.text:
+                                    # Altri campi piatti (NativeLeagueID, NextBirthDay, etc.)
+                                    p_data[d_child.tag] = d_child.text
+                except Exception as detail_err:
+                    print(f"Warning: could not fetch details for player {player_id}: {detail_err}")
+
+                # --- CONTROLLO E SALVATAGGIO ---
                 doc_ref = db.collection(self.players_coll).document(str(player_id))
                 snapshot = doc_ref.get()
                 
@@ -467,11 +494,9 @@ class PlayerManager:
                     updated_at = existing_data.get('updated_at')
                     
                     if updated_at:
-                        # Assicuriamoci che updated_at sia aware
                         if hasattr(updated_at, 'tzinfo') and updated_at.tzinfo is None:
                             updated_at = updated_at.replace(tzinfo=pytz.UTC)
                         
-                        # Se FetchedDate è più recente di updated_at, facciamo l'update
                         if fetched_date > updated_at:
                             should_update = True
                     else:

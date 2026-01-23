@@ -240,11 +240,17 @@ def mock(request):
     }
 
     file_param = request.args.get('file')
+    player_id = request.args.get('playerID')
+    
     if not file_param:
         return ({"error": "Parametro 'file' mancante"}, 400, headers)
 
-    # Costruisce il percorso del file (sicuro)
-    file_name = f"{file_param}.xml"
+    # Logica specifica per playerdetails: usa playerdetail-{ID}.xml
+    if file_param == 'playerdetails' and player_id:
+        file_name = f"playerdetail-{player_id}.xml"
+    else:
+        file_name = f"{file_param}.xml"
+
     # Impedisce directory traversal per sicurezza
     if ".." in file_name or "/" in file_name:
          return ({"error": "Nome file non valido"}, 400, headers)
