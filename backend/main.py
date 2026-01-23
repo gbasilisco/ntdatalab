@@ -1,3 +1,4 @@
+import os
 import functions_framework
 from hattrick_advisor import HattrickAdvisor
 from firebase import TargetManager, RoleManager, ListManager, PlayerManager, UserManager
@@ -6,18 +7,18 @@ from firebase import TargetManager, RoleManager, ListManager, PlayerManager, Use
 def analyze_player(request):
     """
     HTTP Cloud Function entry point con gestione CORS.
-    Supporta:
-    - Analisi giocatore
-    - Gestione Target (CRUD)
-    - Gestione Ruoli (CRUD Coach)
-    - Gestione Liste (CRUD)
+    Funge da router per supportare la retrocompatibilità.
     """
-    
+    # --- ROUTING PER MOCK (Retrocompatibilità) ---
+    # Se il path è /mock o è presente il parametro 'file', delega a mock(request)
+    if 'file' in request.args or request.path == '/mock':
+        return mock(request)
+
     # --- 1. GESTIONE CORS (Pre-flight request) ---
     if request.method == 'OPTIONS':
         headers = {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Methods': 'POST, GET',
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Max-Age': '3600'
         }
@@ -32,7 +33,9 @@ def analyze_player(request):
     request_json = request.get_json(silent=True)
     
     if not request_json:
-        return ({"error": "JSON payload mancante"}, 400, headers)
+        # Se è una GET senza parametri mock, restituiamo errore 
+        # (mantenendo comportamento precedente per le POST senza body)
+        return ({"error": "JSON payload mancante o parametri non validi"}, 400, headers)
 
     try:
         action = request_json.get('action')
@@ -208,4 +211,47 @@ def analyze_player(request):
         
     except Exception as e:
         # Gestione errori generici
+        return ({"error": str(e)}, 500, headers)
+
+@functions_framework.http
+def mock(request):
+    """
+    Mock function che restituisce file XML in base al parametro ?file=
+    """
+    # Gestione CORS
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return ('', 204, headers)
+
+    headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
+
+    file_param = request.args.get('file')
+    if not file_param:
+        return ({"error": "Parametro 'file' mancante"}, 400, headers)
+
+    # Costruisce il percorso del file (sicuro)
+    file_name = f"{file_param}.xml"
+    # Impedisce directory traversal per sicurezza
+    if ".." in file_name or "/" in file_name:
+         return ({"error": "Nome file non valido"}, 400, headers)
+    
+    file_path = os.path.join(os.path.dirname(__file__), file_name)
+
+    if not os.path.exists(file_path):
+        return ({"error": f"File {file_name} non trovato"}, 404, headers)
+
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            xml_content = f.read()
+        
+        headers['Content-Type'] = 'application/xml; charset=utf-8'
+        return (xml_content, 200, headers)
+    except Exception as e:
         return ({"error": str(e)}, 500, headers)
