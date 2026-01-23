@@ -67,7 +67,7 @@ def analyze_player(request):
             requester = request_json.get('requesterEmail')
             
             if method == 'get_user_context':
-                email = request_json.get('email')
+                email = request_json.get('email') or requester
                 ctx = manager.get_user_context(email)
                 return (ctx, 200, headers)
 
@@ -83,6 +83,8 @@ def analyze_player(request):
                 return ({"users": users}, 200, headers)
 
             elif method == 'get_coach_teams':
+                # Return all teams where user is either coach OR member for convenience in list mgmt?
+                # User asked specifically for lists they can manage.
                 ctx = manager.get_user_context(requester)
                 return ({"teams": ctx['owned_teams']}, 200, headers)
             
