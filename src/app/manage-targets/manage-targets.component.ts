@@ -40,12 +40,12 @@ export class ManageTargetsComponent implements OnInit {
   };
 
   availableRoles = [
-    { label: 'Centrocampista (Midfielder)', value: 'midfielder' },
-    { label: 'Difensore (Defender)', value: 'defender' },
-    { label: 'Terzino (Wingback)', value: 'wingback' },
-    { label: 'Attaccante (Forward)', value: 'forward' },
-    { label: 'Ala (Winger)', value: 'winger' },
-    { label: 'Portiere (Goalkeeper)', value: 'goalkeeper' }
+    { label: 'COMMON.ROLES.MIDFIELDER', value: 'midfielder' },
+    { label: 'COMMON.ROLES.DEFENDER', value: 'defender' },
+    { label: 'COMMON.ROLES.WINGBACK', value: 'wingback' },
+    { label: 'COMMON.ROLES.FORWARD', value: 'forward' },
+    { label: 'COMMON.ROLES.WINGER', value: 'winger' },
+    { label: 'COMMON.ROLES.KEEPER', value: 'goalkeeper' }
   ];
 
   availableStats = [

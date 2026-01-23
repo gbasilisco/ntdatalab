@@ -17,25 +17,89 @@ export interface HattrickCsvRow {
   TransferListed: string;
   TeamTrainerSkill: string;
   OwningUserID: string;
-  /* OLD
-  SkillKeeper: string;
-  SkillPlaymaker: string;
-  SkillScorer: string;
-  SkillPassing: string;
-  SkillWinger: string;
-  SkillDefender: string;
-  SkillSetPieces: string;
-  */
+  KeeperSkill: string;
+  PlaymakerSkill: string;
+  ScorerSkill: string;
+  PassingSkill: string;
+  WingerSkill: string;
+  DefenderSkill: string;
+  SetPiecesSkill: string;
+}
 
-  // --- NOMI COLONNE CORRETTI ---
-  KeeperSkill: string;      // Prima era SkillKeeper
-  PlaymakerSkill: string;   // Prima era SkillPlaymaker
-  ScorerSkill: string;      // Prima era SkillScorer
-  PassingSkill: string;     // Prima era SkillPassing
-  WingerSkill: string;      // Prima era SkillWinger
-  DefenderSkill: string;    // Prima era SkillDefender
-  SetPiecesSkill: string;   // Prima era SkillSetPieces
-
+/**
+ * Full Hattrick Player structure based on user requirements.
+ * Used for detailed "My Players" view.
+ */
+export interface HattrickPlayer {
+  id?: string;
+  PlayerID: string;
+  FirstName: string;
+  NickName: string;
+  LastName: string;
+  Age: number;
+  AgeDays: number;
+  TSI: number;
+  Salary: number;
+  SalaryAbroad: number;
+  InjuryLevel: number;
+  Cards: number;
+  TransferListed: string;
+  OwningUserID: string;
+  OwningTeamID: string;
+  IsAbroad: boolean;
+  NativeLeagueID: string;
+  OwningLeagueID: string;
+  OwningLeagueName: string;
+  IsNationalTeam: boolean;
+  WasNationalTeam: boolean;
+  Agreeability: number;
+  Aggressiveness: number;
+  Honesty: number;
+  Loyalty: number;
+  Experience: number;
+  Leadership: number;
+  Specialty: number;
+  SpecialtyName: string;
+  PlayerForm: number;
+  StaminaSkill: number;
+  KeeperSkill: number;
+  PlaymakerSkill: number;
+  ScorerSkill: number;
+  PassingSkill: number;
+  WingerSkill: number;
+  DefenderSkill: number;
+  SetPiecesSkill: number;
+  EtalonID: string;
+  EtalonName: string;
+  Potential: number;
+  DiffTraining: number;
+  TrainingType: number;
+  StaminaTrainingPart: number;
+  TrainingName: string;
+  TrainingType_Last: number;
+  StaminaTrainingPart_Last: number;
+  TrainingLevel: number;
+  NewTrainingLevel: number;
+  TrainingLevel_Last: number;
+  TrainerSkill: number;
+  TeamTrainerSkill: number;
+  TeamTrainerLeadership: number;
+  AssistantTrainerLevels: number;
+  FormCoachLevels: number;
+  MedicLevels: number;
+  MatchID: string;
+  PositionCode: number;
+  PlayerCategoryID: number;
+  PlayerCategoryName: string;
+  MatchTime: number;
+  Rating: number;
+  RatingEndOfGame: number;
+  Updated: string;
+  UpdatedSkills: string;
+  OwnerNotes: string;
+  LastScoutNote: string;
+  NextBirthDay: string;
+  TeamName: string;
 }
 
 // Aggiungi questa interfaccia per il dettaglio skill

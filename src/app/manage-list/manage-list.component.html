@@ -5,7 +5,7 @@
         <h3>{{ 'MANAGE_LIST.NEW_LIST' | translate }}</h3>
         <div class="create-row" style="display: flex; gap: 10px; flex-wrap: wrap;">
             <select [(ngModel)]="selectedTeamId" style="flex: 1; min-width: 150px;">
-                <option value="" disabled>Seleziona Team</option>
+                <option value="" disabled>{{ 'MANAGE_LIST.SELECT_TEAM' | translate }}</option>
                 <option *ngFor="let t of myTeams" [value]="t.id">
                     {{ t.type }} - {{ t.name }}
                 </option>

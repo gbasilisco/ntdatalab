@@ -7,7 +7,15 @@
     "MANAGELIST": "Check Lista",
     "MAKEPORTALLINK": "Portal Link Generator",
     "MANAGE_TARGETS": "Gestione Target",
-    "MYLIST": "Gestione Liste"
+    "MYLIST": "Gestione Liste",
+    "MY_PLAYERS": "Miei Giocatori",
+    "MANAGE_ROLES": "Gestione Ruoli",
+    "CONTACT": "Contatti",
+    "ABOUT": "About",
+    "LOGOUT": "Esci"
+  },
+  "ABOUT": {
+    "TITLE": "About"
   },
   "CONTACT": {
     "H3": "Contattaci",
@@ -26,7 +34,10 @@
   },
   "MAKEPORTALLINK": {
     "H3": "Genera link a Portal",
-    "DESC": "Vai al profilo"
+    "DESC": "Vai al profilo",
+    "PLAYER_ID_LABEL": "Player ID:",
+    "PLACEHOLDER_ID": "Inserisci Player ID",
+    "LINK_LABEL": "Link:"
   },
   "PLAYER_DETAIL": {
     "TITLE": "Check lista",
@@ -34,7 +45,8 @@
     "ROLE_LABEL": "Analizza come Ruolo:",
     "TARGET_TEAM_LABEL": "Target Team:",
     "VARIANT_LABEL": "Variante Tattica:",
-    "CSV_FILE_LABEL": "File CSV:",
+    "CSV_FILE_LABEL": "File CSV o Manuale",
+    "SELECT_LIST_LABEL": "Scegli una lista esistente:",
     "ANALYSIS_TITLE": "Analisi per Ruolo:",
     "PLAYER_COLUMN": "Giocatore",
     "MARKET_COLUMN": "Market",
@@ -52,7 +64,24 @@
     "MARKET_AVAILABLE": "❌ Sul mercato"
   },
   "COMMON": {
-    "BACK": "Indietro"
+    "BACK": "Indietro",
+    "SKILLS": {
+      "goalkeeping": "Parate",
+      "playmaking": "Regia",
+      "scoring": "Attacco",
+      "passing": "Passaggi",
+      "winger": "Cross",
+      "defending": "Difesa",
+      "set pieces": "Calci piazzati"
+    },
+    "ROLES": {
+      "MIDFIELDER": "Centrocampista",
+      "DEFENDER": "Difensore",
+      "WINGBACK": "Terzino",
+      "WINGER": "Ala",
+      "FORWARD": "Attaccante",
+      "KEEPER": "Portiere"
+    }
   },
   "MANAGE_TARGETS": {
     "TITLE": "Gestione Target",
@@ -79,6 +108,7 @@
   "MANAGE_LIST": {
     "TITLE": "Gestione Liste",
     "NEW_LIST": "Nuova Lista",
+    "SELECT_TEAM": "Seleziona Team",
     "PLACEHOLDER_NAME": "Nome Lista",
     "CREATE_BUTTON": "Crea",
     "EXISTING_LISTS": "Liste Esistenti",
@@ -91,9 +121,14 @@
   "MANAGE_PLAYER": {
     "TITLE": "Gestione Giocatori della Lista",
     "BACK_BUTTON": "Indietro alle Liste",
+    "SEARCH_PLAYER_TITLE": "Cerca Giocatore",
+    "PLACEHOLDER_SEARCH": "Cerca per nome (almeno 2 caratteri)...",
+    "SEARCH_LOADING": "Ricerca in corso...",
+    "ADD_MANUAL_TITLE": "Aggiungi Giocatore (Manuale)",
     "ADD_PLAYER_TITLE": "Aggiungi Giocatore",
     "PLACEHOLDER_ID": "ID Giocatore",
     "ADD_BUTTON": "Aggiungi",
+    "DETAIL_BUTTON": "Dettaglio",
     "PLAYERS_IN_LIST_TITLE": "Giocatori in Lista",
     "LOADING": "Caricamento...",
     "NO_PLAYERS": "Nessun giocatore in questa lista.",
@@ -112,6 +147,56 @@
     "PLACEHOLDER_TEAM_NAME": "Nome Team (es. Italia)",
     "ASSIGN_BUTTON": "Assegna",
     "USERS_ROLES_TITLE": "Utenti e Ruoli",
-    "LOADING": "Caricamento..."
+    "LOADING": "Caricamento...",
+    "ASSISTANT": "Assistant",
+    "SCOUT": "Scout"
+  },
+  "MY_PLAYERS": {
+    "TITLE": "Miei Giocatori",
+    "IMPORT_CSV": "Importa CSV Giocatori",
+    "LOADING": "Caricamento giocatori...",
+    "NO_PLAYERS": "Nessun giocatore in questa lista.",
+    "DETAIL_BUTTON": "Dettaglio",
+    "BACK_TO_LIST": "← Torna alla lista",
+    "AGE_JOIN_ANNI": "anni e",
+    "AGE_JOIN_GIORNI": "giorni, Prossimo compleanno:",
+    "FORM_LABEL": "di forma",
+    "STAMINA_LABEL": "in resistenza.",
+    "PERSONALITY_TEXT": "popolare una persona equilibrata e onesta.",
+    "EXPERIENCE_JOIN": "È",
+    "EXPERIENCE_LABEL": "in esperienza e",
+    "CHARISMA_LABEL": "in carisma.",
+    "LOYALTY_TEXT": "Il suo livello di fedeltà è",
+    "SKILLS_TITLE": "SKILLS",
+    "OWNER_LABEL": "Proprietario:",
+    "TSI_LABEL": "Total Skill Index (TSI):",
+    "SALARY_LABEL": "Stipendio:",
+    "CARDS_LABEL": "Ammonizioni:",
+    "INJURIES_LABEL": "Infortuni:",
+    "SPECIALTY_LABEL": "Specialità:",
+    "WEEKS": "settimane",
+    "NONE": "Nessuno",
+    "NONE_F": "Nessuna",
+    "SALARY_CURRENCY": "€/settimana",
+    "TABLE": {
+      "FIRSTNAME": "Nome",
+      "LASTNAME": "Cognome",
+      "PLAYERID": "PlayerID",
+      "AGE": "Età",
+      "DAYS": "Giorni",
+      "TSI": "TSI",
+      "LEAGUEID": "LeagueID",
+      "ACTION": "Azione"
+    }
+  },
+  "REGISTER": {
+    "TITLE": "Completamento Profilo",
+    "DESC": "Inserisci i tuoi dati Hattrick per continuare.",
+    "USERID_LABEL": "Hattrick UserID",
+    "TEAMIDS_LABEL": "I tuoi Team ID (separati da virgola)",
+    "PLACEHOLDER_USERID": "Es. 1234567",
+    "PLACEHOLDER_TEAMIDS": "Es. 1000, 2000",
+    "SAVE_BUTTON": "Salva Profilo",
+    "SAVING_BUTTON": "Salvataggio..."
   }
 }

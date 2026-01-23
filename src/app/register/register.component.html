@@ -1,0 +1,24 @@
+<div class="register-container">
+    <div class="register-card">
+        <h2>{{ 'REGISTER.TITLE' | translate }}</h2>
+        <p>{{ 'REGISTER.DESC' | translate }}</p>
+
+        <form (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="userid">{{ 'REGISTER.USERID_LABEL' | translate }}</label>
+                <input type="text" id="userid" name="userid" [(ngModel)]="userid" required
+                    [placeholder]="'REGISTER.PLACEHOLDER_USERID' | translate">
+            </div>
+
+            <div class="form-group">
+                <label for="teamids">{{ 'REGISTER.TEAMIDS_LABEL' | translate }}</label>
+                <input type="text" id="teamids" name="teamids" [(ngModel)]="teamidsStr" required
+                    [placeholder]="'REGISTER.PLACEHOLDER_TEAMIDS' | translate">
+            </div>
+
+            <button type="submit" [disabled]="loading" class="btn-submit">
+                {{ loading ? ('REGISTER.SAVING_BUTTON' | translate) : ('REGISTER.SAVE_BUTTON' | translate) }}
+            </button>
+        </form>
+    </div>
+</div>

@@ -9,7 +9,7 @@
         <label>{{ 'PLAYER_DETAIL.ROLE_LABEL' | translate }}</label>
         <select [(ngModel)]="selectedRole" (change)="onRoleChange()" class="role-select">
           <option *ngFor="let r of roleOptions" [value]="r.value">
-            {{ r.label }}
+            {{ r.label | translate }}
           </option>
         </select>
       </div>
@@ -29,9 +29,23 @@
       </div>
     </div>
 
-    <div class="form-group">
-      <label>{{ 'PLAYER_DETAIL.CSV_FILE_LABEL' | translate }}</label>
-      <input type="file" (change)="onFileSelected($event)" accept=".csv" />
+    <div class="form-row" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+      <div class="form-group" style="flex: 1;">
+        <label>{{ 'PLAYER_DETAIL.SELECT_LIST_LABEL' | translate }}</label>
+        <select [(ngModel)]="selectedListId" (change)="onListChange()" class="list-select">
+          <option value="">-- {{ 'PLAYER_DETAIL.CSV_FILE_LABEL' | translate }} --</option>
+          <optgroup *ngFor="let group of groupedLists | keyvalue" [label]="group.key">
+            <option *ngFor="let list of group.value" [value]="list.id">
+              {{ list.name }}
+            </option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="form-group" style="flex: 1;">
+        <label>{{ 'PLAYER_DETAIL.CSV_FILE_LABEL' | translate }}</label>
+        <input type="file" (change)="onFileSelected($event)" accept=".csv" class="file-input" />
+      </div>
     </div>
   </div>
 
@@ -71,7 +85,7 @@
                 <strong>
                   <a href="https://hattrickportal.online/Tracker/Player.aspx?playerID={{ p.id }}"
                     target="_portal{{ p.id }}">
-                    Portal link
+                    {{ 'MANAGE_PLAYER.PORTAL_LINK' | translate }}
                   </a>
                   <br>
                   <a href="https://www.hattrick.org/goto.ashx?path=/MyHattrick/Inbox/?actionType=newMail%26userid={{ p.owningUserID }}"
@@ -163,7 +177,7 @@
 
               <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eee;">
                 <div>🏋️ <strong>{{ p.trainingType }}</strong></div>
-                <div>🔋 <strong>{{ p.stamina }}%</strong> Resistenza</div>
+                <div>🔋 <strong>{{ p.stamina }}%</strong> {{ 'MY_PLAYERS.STAMINA_LABEL' | translate }}</div>
               </div>
 
               <div *ngIf="p.analysis">

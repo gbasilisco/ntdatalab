@@ -1,0 +1,145 @@
+<div class="header-actions">
+    <h2>{{ 'MY_PLAYERS.TITLE' | translate }}</h2>
+    <div class="import-section">
+        <input type="file" id="csv-import" (change)="onFileSelected($event)" accept=".csv" style="display: none;" />
+        <label for="csv-import" class="btn-import">{{ 'MY_PLAYERS.IMPORT_CSV' | translate }}</label>
+    </div>
+</div>
+
+<!-- Lista Giocatori (Tabella) -->
+<div class="card-form" *ngIf="!selectedPlayer">
+    <div *ngIf="isLoading" class="loading">{{ 'MY_PLAYERS.LOADING' | translate }}</div>
+    <div *ngIf="!isLoading && players.length === 0" class="no-data">{{ 'MY_PLAYERS.NO_PLAYERS' | translate }}</div>
+
+    <table class="player-table" *ngIf="!isLoading && players.length > 0">
+        <thead>
+            <tr>
+                <th>{{ 'MY_PLAYERS.TABLE.FIRSTNAME' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.LASTNAME' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.PLAYERID' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.AGE' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.DAYS' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.TSI' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.LEAGUEID' | translate }}</th>
+                <th>{{ 'MY_PLAYERS.TABLE.ACTION' | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let p of players">
+                <td>{{ p.FirstName }}</td>
+                <td>{{ p.LastName }}</td>
+                <td>{{ p.PlayerID }}</td>
+                <td>{{ p.Age }}</td>
+                <td>{{ p.AgeDays }}</td>
+                <td>{{ p.TSI | number }}</td>
+                <td>{{ p.NativeLeagueID }}</td>
+                <td>
+                    <button class="btn-detail" (click)="selectPlayer(p)">{{ 'MY_PLAYERS.DETAIL_BUTTON' | translate
+                        }}</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Dettaglio Giocatore (HT Style) -->
+<div class="player-detail-card" *ngIf="selectedPlayer">
+    <button class="btn-back" (click)="closeDetail()">{{ 'MY_PLAYERS.BACK_TO_LIST' | translate }}</button>
+
+    <div class="ht-header">
+        <div class="ht-name-row">
+            <span class="ht-name">{{ selectedPlayer.FirstName }} {{ selectedPlayer.LastName }}</span>
+            <span class="ht-id">({{ selectedPlayer.PlayerID }})</span>
+            <span *ngIf="selectedPlayer.Cards > 0" class="card-icon" [class.red]="selectedPlayer.Cards >= 3"
+                [class.yellow]="selectedPlayer.Cards < 3">🟨</span>
+        </div>
+        <div class="ht-sub-row">
+            <span class="flag-icon">🏳️</span>
+            {{ selectedPlayer.Age }} {{ 'MY_PLAYERS.AGE_JOIN_ANNI' | translate }} {{ selectedPlayer.AgeDays }} {{
+            'MY_PLAYERS.AGE_JOIN_GIORNI' | translate }}
+            {{selectedPlayer.NextBirthDay | date}}
+        </div>
+    </div>
+
+    <div class="ht-body">
+        <div class="ht-skills-summary">
+            <p>{{ selectedPlayer.PlayerForm }} {{ 'MY_PLAYERS.FORM_LABEL' | translate }} {{ selectedPlayer.StaminaSkill
+                }} {{ 'MY_PLAYERS.STAMINA_LABEL' | translate }}</p>
+            <p>{{ 'MY_PLAYERS.PERSONALITY_TEXT' | translate }}</p>
+            <p>{{ 'MY_PLAYERS.EXPERIENCE_JOIN' | translate }} {{ selectedPlayer.Experience }} {{
+                'MY_PLAYERS.EXPERIENCE_LABEL' | translate }} {{ selectedPlayer.Honesty }} {{ 'MY_PLAYERS.CHARISMA_LABEL'
+                | translate }}</p>
+            <p>{{ 'MY_PLAYERS.LOYALTY_TEXT' | translate }} {{ selectedPlayer.Loyalty }}.</p>
+        </div>
+
+        <div>
+            {{ 'MY_PLAYERS.SKILLS_TITLE' | translate }} <br>
+            {{ 'COMMON.SKILLS.goalkeeping' | translate }}: {{ selectedPlayer.KeeperSkill }} <br>
+            {{ 'COMMON.SKILLS.playmaking' | translate }}: {{ selectedPlayer.PlaymakerSkill }} <br>
+            {{ 'COMMON.SKILLS.scoring' | translate }}: {{ selectedPlayer.ScorerSkill }} <br>
+            {{ 'COMMON.SKILLS.passing' | translate }}: {{ selectedPlayer.PassingSkill }} <br>
+            {{ 'COMMON.SKILLS.winger' | translate }}: {{ selectedPlayer.WingerSkill }} <br>
+            {{ 'COMMON.SKILLS.defending' | translate }}: {{ selectedPlayer.DefenderSkill }} <br>
+            {{ 'COMMON.SKILLS.set pieces' | translate }}: {{ selectedPlayer.SetPiecesSkill }} <br><br>
+        </div>
+
+        <div class="ht-info-grid">
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.OWNER_LABEL' | translate }}</span>
+                <span class="value">{{ selectedPlayer.TeamName || 'N.A.' }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.TSI_LABEL' | translate }}</span>
+                <span class="value">{{ selectedPlayer.TSI | number }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.SALARY_LABEL' | translate }}</span>
+                <span class="value">{{ selectedPlayer.Salary | number }} {{ 'MY_PLAYERS.SALARY_CURRENCY' | translate
+                    }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.CARDS_LABEL' | translate }}</span>
+                <span class="value">{{ selectedPlayer.Cards }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.INJURIES_LABEL' | translate }}</span>
+                <span class="value">{{ selectedPlayer.InjuryLevel > 0 ? (selectedPlayer.InjuryLevel + ' ' +
+                    ('MY_PLAYERS.WEEKS' | translate))
+                    : ('MY_PLAYERS.NONE' | translate) }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">{{ 'MY_PLAYERS.SPECIALTY_LABEL' | translate }}</span>
+                <!--<span class="value">{{ selectedPlayer.SpecialtyName || 'Nessuna' }}</span> <br>-->
+                <span class="value">{{ selectedPlayer.Specialty || ('MY_PLAYERS.NONE_F' | translate) }}</span>
+            </div>
+            <!--<div class="info-row">
+                <span class="label">Ultimo match:</span>
+                HARDCODED
+                <span class="value">17/01/2026</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Punteggio:</span>
+                <span class="value stars">
+                    <span *ngFor="let s of getRatingStars(selectedPlayer.Rating)">⭐</span>
+                    <span *ngIf="hasHalfStar(selectedPlayer.Rating)">⯪</span>
+                </span>
+            </div>
+            <div class="info-row">
+                <span class="label">Posizione:</span>
+                HARDCODED
+                <span class="value">Left Inner Midfield (90’)</span>
+            </div>-->
+        </div>
+
+        <!--
+        <div class="ht-tracker-section">
+            <h3>Tracker</h3>
+            <div class="htms-row">
+                <strong>Punti HTMS:</strong>
+                Abilità: <strong>{{ selectedPlayer.Potential }}</strong> / Potenziale: <strong> HARDCODED 2004</strong>
+            </div>
+            
+    </div>
+    -->
+    </div>
+</div>

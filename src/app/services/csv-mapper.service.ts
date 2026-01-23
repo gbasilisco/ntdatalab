@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HattrickCsvRow, GoogleFunctionPayload } from '../models/hattrick.model';
+import { HattrickCsvRow, GoogleFunctionPayload, HattrickPlayer } from '../models/hattrick.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,31 +16,31 @@ export class CsvMapperService {
    * @param userRole Il ruolo FORZATO dall'utente (es. 'midfielder')
    */
   mapRowToPayload(
-    row: HattrickCsvRow, 
-    userTarget: string, 
+    row: HattrickCsvRow,
+    userTarget: string,
     userVariant: string,
-    userRole: string 
+    userRole: string
   ): GoogleFunctionPayload | null {
-    
+
     // Se non c'è ID, è una riga vuota o invalida
     if (!row.PlayerID) return null;
 
     return {
       last_update: this.formatDate(row.Updated),
       player_age: this.calculateAge(row.Age, row.AgeDays),
-      
+
       // Qui usiamo il ruolo deciso dall'utente, ignorando la categoria del CSV
       player_role: userRole,
-      
+
       team_target: userTarget,
       role_variant: userVariant,
-      
+
       // Mappiamo l'allenamento (gestisce ita/eng)
       training_type: this.mapTrainingType(row.TrainingName),
-      
+
       // Parsiamo la stamina (default 15 se vuota/errore)
       stamina_share: parseInt(row.StaminaTrainingPart, 10) || 15,
-      
+
       current_skills: {
         goalkeeping: parseInt(row.KeeperSkill, 10) || 0,
         playmaking: parseInt(row.PlaymakerSkill, 10) || 0,
@@ -49,6 +49,38 @@ export class CsvMapperService {
         winger: parseInt(row.WingerSkill, 10) || 0,
         defending: parseInt(row.DefenderSkill, 10) || 0,
         "set pieces": parseInt(row.SetPiecesSkill, 10) || 0
+      }
+    };
+  }
+
+  /**
+   * Mappa un HattrickPlayer (dal DB Firestore) nel payload per l'analisi.
+   */
+  mapPlayerToPayload(
+    player: HattrickPlayer,
+    userTarget: string,
+    userVariant: string,
+    userRole: string
+  ): GoogleFunctionPayload {
+    return {
+      last_update: this.formatDate(player.Updated || ''),
+      player_age: this.calculateAge(String(player.Age || 17), String(player.AgeDays || 0)),
+
+      player_role: userRole,
+      team_target: userTarget,
+      role_variant: userVariant,
+
+      training_type: this.mapTrainingType(player.TrainingName || ''),
+      stamina_share: this.parseNumber(player.StaminaTrainingPart) || 15,
+
+      current_skills: {
+        goalkeeping: this.parseNumber(player.KeeperSkill),
+        playmaking: this.parseNumber(player.PlaymakerSkill),
+        scoring: this.parseNumber(player.ScorerSkill),
+        passing: this.parseNumber(player.PassingSkill),
+        winger: this.parseNumber(player.WingerSkill),
+        defending: this.parseNumber(player.DefenderSkill),
+        "set pieces": this.parseNumber(player.SetPiecesSkill)
       }
     };
   }
@@ -62,9 +94,9 @@ export class CsvMapperService {
     return parseFloat((y + (d / 112.0)).toFixed(2));
   }
 
-// --- FORMATO DATA SPECIFICO PER: 22/12/2025 06:52:51 ---
+  // --- FORMATO DATA SPECIFICO PER: 22/12/2025 06:52:51 ---
   private formatDate(dateStr: string): string {
-    if (!dateStr) return new Date().toISOString().split('.')[0]; 
+    if (!dateStr) return new Date().toISOString().split('.')[0];
 
     const cleanStr = dateStr.trim();
 
@@ -89,12 +121,12 @@ export class CsvMapperService {
     const simpleDateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     const simpleMatch = cleanStr.match(simpleDateRegex);
     if (simpleMatch) {
-       return `${simpleMatch[3]}-${simpleMatch[2]}-${simpleMatch[1]}T00:00:00`;
+      return `${simpleMatch[3]}-${simpleMatch[2]}-${simpleMatch[1]}T00:00:00`;
     }
 
     // 3. Se è già ISO (dal DB o altro export)
     if (/^\d{4}-\d{2}-\d{2}/.test(cleanStr)) {
-        return cleanStr.replace(' ', 'T');
+      return cleanStr.replace(' ', 'T');
     }
 
     console.warn("Formato data non riconosciuto, uso data odierna:", cleanStr);
@@ -111,7 +143,7 @@ export class CsvMapperService {
   private mapTrainingType(type: string): string {
     const t = (type || '').toLowerCase();
     // console.log("TARINGIGN: " + t);
-    
+
     // Mappatura Allenamenti (Italiano e Inglese) -> Chiavi Python
     if (t.includes('parat') || t.includes('goalk') || t.includes('goaltendin')) return 'goalkeeping';
     if (t.includes('difes') || t.includes('defen')) return 'defending';
@@ -121,7 +153,7 @@ export class CsvMapperService {
     if (t.includes('short passe')) return 'passing';
     if (t.includes('attac') || t.includes('scoring')) return 'scoring';
     if (t.includes('piazzat') || t.includes('setpi') || t.includes('set pieces')) return 'set pieces';
-    
+
     return 'unknown';
   }
 }

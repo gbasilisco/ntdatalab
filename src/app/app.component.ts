@@ -9,6 +9,7 @@ import * as Papa from 'papaparse';
 import { CsvMapperService } from './services/csv-mapper.service';
 import { HattrickCsvRow, PlayerResult, AnalysisResponse } from './models/hattrick.model';
 import { AuthService } from './auth/auth.service';
+import { PlayerDataService } from './services/player-data.service';
 
 // Angular Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,19 +32,20 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 
 export class AppComponent {
-  
+
   title = 'NT Data Lab';
   compName = '';
 
   constructor(
-    private router: Router, 
-    private authService: AuthService, 
+    private router: Router,
+    public authService: AuthService,
+    private playerDataService: PlayerDataService,
     private translate: TranslateService
   ) {
 
     // 1. Imposta le lingue disponibili (opzionale ma consigliato)
     translate.addLangs(['it', 'en']);
-    
+
     // 2. Imposta la lingua di fallback base
     translate.setDefaultLang('it');
 
@@ -69,10 +71,28 @@ export class AppComponent {
 
     // Logica Router esistente
     router.events.subscribe((val) => {
-        if (val instanceof ActivationEnd) {
-            this.compName = val.snapshot.component!.name
-            console.log('componentName:',  this.compName );
-        }
+      if (val instanceof ActivationEnd) {
+        this.compName = val.snapshot.component!.name
+        console.log('componentName:', this.compName);
+      }
+    });
+
+    // ✅ LOGICA DI REDIRECT PER REGISTRAZIONE E SYNC GIOCATORI
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        // 1. Sync giocatori da Mock (XML)
+        this.playerDataService.syncPlayers().subscribe({
+          next: (res) => console.log('Sync giocatori completato:', res),
+          error: (err) => console.error('Errore sync giocatori:', err)
+        });
+
+        // 2. Controllo profilo
+        this.authService.getUserProfile(user.email).subscribe(res => {
+          if (!res.profile && this.router.url !== '/register' && this.router.url !== '/login') {
+            this.router.navigate(['/register']);
+          }
+        });
+      }
     });
   }
 
@@ -84,4 +104,7 @@ export class AppComponent {
     }
   }
 
+  logout() {
+    this.authService.logout();
+  }
 }

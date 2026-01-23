@@ -1,6 +1,6 @@
 <div class="container">
     <h2>{{ 'MANAGE_TARGETS.TITLE' | translate }}</h2>
-    <a routerLink="/player" class="btn-back">{{ 'COMMON.BACK' | translate }}</a>
+    <a routerLink="/manage-lists" class="btn-back">{{ 'COMMON.BACK' | translate }}</a>
 
     <div class="card-form">
         <h3>{{ newTarget.id ? ('MANAGE_TARGETS.EDIT_TARGET' | translate) : ('MANAGE_TARGETS.NEW_TARGET' | translate) }}
@@ -9,7 +9,7 @@
         <div class="form-group">
             <label>{{ 'MANAGE_TARGETS.ROLE' | translate }}:</label>
             <select [(ngModel)]="newTarget.role">
-                <option *ngFor="let r of availableRoles" [value]="r.value">{{ r.label }}</option>
+                <option *ngFor="let r of availableRoles" [value]="r.value">{{ r.label | translate }}</option>
             </select>
         </div>
 
@@ -39,7 +39,7 @@
         <h4>{{ 'MANAGE_TARGETS.SKILLS' | translate }}</h4>
         <div class="skills-grid">
             <div class="skill-item" *ngFor="let skill of availableStats">
-                <label>{{ skill | titlecase }}:</label>
+                <label>{{ 'COMMON.SKILLS.' + skill | translate }}:</label>
                 <input type="number" [(ngModel)]="newTarget.stats[skill]" min="0" step="0.5">
             </div>
         </div>
@@ -67,7 +67,7 @@
                         <div class="target-stats">
                             <span *ngFor="let s of t.stats | keyvalue">
                                 <ng-container *ngIf="s.value > 0">
-                                    {{ s.key }}: {{ s.value }} |
+                                    {{ 'COMMON.SKILLS.' + s.key | translate }}: {{ s.value }} |
                                 </ng-container>
                             </span>
                         </div>

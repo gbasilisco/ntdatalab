@@ -4,12 +4,13 @@
 
   <div class="card-form">
     <div class="form-group">
-      <label for="playerId">Player ID:</label>
-      <input id="playerId" type="text" [(ngModel)]="playerId" placeholder="Inserisci Player ID" />
+      <label for="playerId">{{ 'MAKEPORTALLINK.PLAYER_ID_LABEL' | translate }}</label>
+      <input id="playerId" type="text" [(ngModel)]="playerId"
+        [placeholder]="'MAKEPORTALLINK.PLACEHOLDER_ID' | translate" />
     </div>
 
     <div *ngIf="playerId" class="result-box">
-      Link:
+      {{ 'MAKEPORTALLINK.LINK_LABEL' | translate }}
       <a [href]="'https://hattrickportal.online/Tracker/Player.aspx?playerID=' + playerId" target="_blank"
         rel="noopener noreferrer">
         {{ 'MAKEPORTALLINK.DESC' | translate }}

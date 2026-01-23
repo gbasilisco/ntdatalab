@@ -35,3 +35,18 @@
 .topnav .icon {
   display: none;
 }
+
+.logout-btn {
+  float: right;
+  margin-right: 16px;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.logout-btn:hover {
+  background-color: #c0392b;
+}

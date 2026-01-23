@@ -2,8 +2,28 @@
     <h2>{{ 'MANAGE_PLAYER.TITLE' | translate }}</h2>
     <a routerLink="/manage-lists" class="btn-back">{{ 'MANAGE_PLAYER.BACK_BUTTON' | translate }}</a>
 
+    <div *ngIf="errorMessage" class="error-box">
+        {{ errorMessage }}
+    </div>
+
     <div class="card-form">
-        <h3>{{ 'MANAGE_PLAYER.ADD_PLAYER_TITLE' | translate }}</h3>
+        <h3>{{ 'MANAGE_PLAYER.SEARCH_PLAYER_TITLE' | translate }}</h3>
+        <div class="add-row">
+            <input [(ngModel)]="searchQuery" (input)="searchPlayers()"
+                [placeholder]="'MANAGE_PLAYER.PLACEHOLDER_SEARCH' | translate" />
+        </div>
+        <div *ngIf="isSearching" class="loading-small">{{ 'MANAGE_PLAYER.SEARCH_LOADING' | translate }}</div>
+        <ul class="search-results" *ngIf="searchResults.length > 0">
+            <li *ngFor="let p of searchResults">
+                <span>{{ p.FirstName }} {{ p.LastName }} ({{ p.PlayerID }})</span>
+                <button (click)="addPlayer(p.PlayerID)" class="btn-sm">{{ 'MANAGE_PLAYER.ADD_BUTTON' | translate
+                    }}</button>
+            </li>
+        </ul>
+    </div>
+
+    <div class="card-form" style="margin-top: 20px;">
+        <h3>{{ 'MANAGE_PLAYER.ADD_MANUAL_TITLE' | translate }}</h3>
         <div class="add-row">
             <input [(ngModel)]="newPlayerId" [placeholder]="'MANAGE_PLAYER.PLACEHOLDER_ID' | translate" />
             <button (click)="addPlayer()" [disabled]="!newPlayerId">{{ 'MANAGE_PLAYER.ADD_BUTTON' | translate
@@ -18,13 +38,21 @@
 
         <ul *ngIf="!isLoading">
             <li *ngFor="let p of players" class="player-item">
-                <span>
-                    <strong>{{ p.player_id }}</strong>
-                    <a [href]="'https://hattrickportal.online/Tracker/Player.aspx?playerID=' + p.player_id"
-                        target="_blank" style="margin-left: 10px;">{{ 'MANAGE_PLAYER.PORTAL_LINK' | translate }}</a>
-                </span>
-                <button class="btn-danger btn-sm" (click)="removePlayer(p.player_id)">{{ 'MANAGE_PLAYER.REMOVE_BUTTON' |
-                    translate }}</button>
+                <div class="player-info">
+                    <span class="player-name">
+                        <strong>{{ p.FirstName }} {{ p.LastName }}</strong>
+                        <small>({{ p.player_id }})</small>
+                    </span>
+                    <div class="player-actions">
+                        <a [routerLink]="['/my-players', p.player_id]" class="btn-xs">{{ 'MANAGE_PLAYER.DETAIL_BUTTON' |
+                            translate }}</a>
+                        <a [href]="'https://hattrickportal.online/Tracker/Player.aspx?playerID=' + p.player_id"
+                            target="_blank" class="btn-xs portal-link">{{ 'MANAGE_PLAYER.PORTAL_LINK' | translate }}</a>
+                    </div>
+                </div>
+                <button class="btn-danger btn-sm" (click)="removePlayer(p.player_id)">
+                    {{ 'MANAGE_PLAYER.REMOVE_BUTTON' | translate }}
+                </button>
             </li>
         </ul>
     </div>

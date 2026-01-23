@@ -11,9 +11,8 @@
         <div class="form-group">
             <label>{{ 'MANAGE_ROLES.ROLE_LABEL' | translate }}</label>
             <select [(ngModel)]="selectedRole">
-                <option value="coach">Coach</option>
-                <option value="assistant">Assistant</option>
-                <option value="scout">Scout</option>
+                <option value="assistant">{{ 'MANAGE_ROLES.ASSISTANT' | translate }}</option>
+                <option value="scout">{{ 'MANAGE_ROLES.SCOUT' | translate }}</option>
             </select>
         </div>
 

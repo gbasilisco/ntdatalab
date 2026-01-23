@@ -7,7 +7,15 @@
     "MANAGELIST": "List Check",
     "MAKEPORTALLINK": "Portal Link Generator",
     "MANAGE_TARGETS": "Manage Targets",
-    "MYLIST": "List Management"
+    "MYLIST": "List Management",
+    "MY_PLAYERS": "My Players",
+    "MANAGE_ROLES": "Manage Roles",
+    "CONTACT": "Contact",
+    "ABOUT": "About",
+    "LOGOUT": "Logout"
+  },
+  "ABOUT": {
+    "TITLE": "About"
   },
   "CONTACT": {
     "H3": "Contact Us",
@@ -26,7 +34,10 @@
   },
   "MAKEPORTALLINK": {
     "H3": "Generate Portal Link",
-    "DESC": "Go to profile"
+    "DESC": "Go to profile",
+    "PLAYER_ID_LABEL": "Player ID:",
+    "PLACEHOLDER_ID": "Enter Player ID",
+    "LINK_LABEL": "Link:"
   },
   "PLAYER_DETAIL": {
     "TITLE": "List Check",
@@ -34,7 +45,8 @@
     "ROLE_LABEL": "Analyze by Role:",
     "TARGET_TEAM_LABEL": "Target Team:",
     "VARIANT_LABEL": "Tactical Variant:",
-    "CSV_FILE_LABEL": "CSV File:",
+    "CSV_FILE_LABEL": "CSV File or Manual",
+    "SELECT_LIST_LABEL": "Choose an existing list:",
     "ANALYSIS_TITLE": "Role Analysis:",
     "PLAYER_COLUMN": "Player",
     "MARKET_COLUMN": "Market",
@@ -52,7 +64,24 @@
     "MARKET_AVAILABLE": "❌ On the market"
   },
   "COMMON": {
-    "BACK": "Back"
+    "BACK": "Back",
+    "SKILLS": {
+      "goalkeeping": "Goalkeeping",
+      "playmaking": "Playmaking",
+      "scoring": "Scoring",
+      "passing": "Passing",
+      "winger": "Winger",
+      "defending": "Defending",
+      "set pieces": "Set Pieces"
+    },
+    "ROLES": {
+      "MIDFIELDER": "Midfielder",
+      "DEFENDER": "Defender",
+      "WINGBACK": "Wingback",
+      "WINGER": "Winger",
+      "FORWARD": "Forward",
+      "KEEPER": "Goalkeeper"
+    }
   },
   "MANAGE_TARGETS": {
     "TITLE": "Manage Targets",
@@ -79,6 +108,7 @@
   "MANAGE_LIST": {
     "TITLE": "List Management",
     "NEW_LIST": "New List",
+    "SELECT_TEAM": "Select Team",
     "PLACEHOLDER_NAME": "List Name",
     "CREATE_BUTTON": "Create",
     "EXISTING_LISTS": "Existing Lists",
@@ -91,9 +121,14 @@
   "MANAGE_PLAYER": {
     "TITLE": "Manage List Players",
     "BACK_BUTTON": "Back to Lists",
+    "SEARCH_PLAYER_TITLE": "Search Player",
+    "PLACEHOLDER_SEARCH": "Search by name (at least 2 characters)...",
+    "SEARCH_LOADING": "Searching...",
+    "ADD_MANUAL_TITLE": "Add Player (Manual)",
     "ADD_PLAYER_TITLE": "Add Player",
     "PLACEHOLDER_ID": "Player ID",
     "ADD_BUTTON": "Add",
+    "DETAIL_BUTTON": "Detail",
     "PLAYERS_IN_LIST_TITLE": "Players in List",
     "LOADING": "Loading...",
     "NO_PLAYERS": "No players in this list.",
@@ -112,6 +147,56 @@
     "PLACEHOLDER_TEAM_NAME": "Team Name (e.g. Italy)",
     "ASSIGN_BUTTON": "Assign",
     "USERS_ROLES_TITLE": "Users and Roles",
-    "LOADING": "Loading..."
+    "LOADING": "Loading...",
+    "ASSISTANT": "Assistant",
+    "SCOUT": "Scout"
+  },
+  "MY_PLAYERS": {
+    "TITLE": "My Players",
+    "IMPORT_CSV": "Import Players CSV",
+    "LOADING": "Loading players...",
+    "NO_PLAYERS": "No players in this list.",
+    "DETAIL_BUTTON": "Detail",
+    "BACK_TO_LIST": "← Back to list",
+    "AGE_JOIN_ANNI": "years and",
+    "AGE_JOIN_GIORNI": "days, Next birthday:",
+    "FORM_LABEL": "form",
+    "STAMINA_LABEL": "stamina.",
+    "PERSONALITY_TEXT": "popular balanced and honest person.",
+    "EXPERIENCE_JOIN": "He is",
+    "EXPERIENCE_LABEL": "in experience and",
+    "CHARISMA_LABEL": "in charisma.",
+    "LOYALTY_TEXT": "His loyalty level is",
+    "SKILLS_TITLE": "SKILLS",
+    "OWNER_LABEL": "Owner:",
+    "TSI_LABEL": "Total Skill Index (TSI):",
+    "SALARY_LABEL": "Salary:",
+    "CARDS_LABEL": "Cards:",
+    "INJURIES_LABEL": "Injuries:",
+    "SPECIALTY_LABEL": "Specialty:",
+    "WEEKS": "weeks",
+    "NONE": "None",
+    "NONE_F": "None",
+    "SALARY_CURRENCY": "€/week",
+    "TABLE": {
+      "FIRSTNAME": "First Name",
+      "LASTNAME": "Last Name",
+      "PLAYERID": "PlayerID",
+      "AGE": "Age",
+      "DAYS": "Days",
+      "TSI": "TSI",
+      "LEAGUEID": "LeagueID",
+      "ACTION": "Action"
+    }
+  },
+  "REGISTER": {
+    "TITLE": "Profile Completion",
+    "DESC": "Enter your Hattrick data to continue.",
+    "USERID_LABEL": "Hattrick UserID",
+    "TEAMIDS_LABEL": "Your Team IDs (comma separated)",
+    "PLACEHOLDER_USERID": "e.g. 1234567",
+    "PLACEHOLDER_TEAMIDS": "e.g. 1000, 2000",
+    "SAVE_BUTTON": "Save Profile",
+    "SAVING_BUTTON": "Saving..."
   }
 }

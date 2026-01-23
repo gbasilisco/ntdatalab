@@ -15,12 +15,12 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   login() {
     this.authService
       .loginWithGoogle()
-      .then(() => this.router.navigate(['/player']))
+      .then(() => this.router.navigate(['/my-players']))
       .catch((err) => {
         // keep console logging minimal; UI messaging can be added later if needed
         console.error('Login failed', err);

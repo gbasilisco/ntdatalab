@@ -6,10 +6,13 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import * as Papa from 'papaparse';
 
 import { CsvMapperService } from '../services/csv-mapper.service';
-import { HattrickCsvRow, PlayerResult, AnalysisResponse } from '../models/hattrick.model';
+import { HattrickCsvRow, PlayerResult, AnalysisResponse, HattrickPlayer } from '../models/hattrick.model';
 import { TranslateModule } from '@ngx-translate/core';
 import { TargetsService } from '../services/targets.service';
 import { AuthService } from '../auth/auth.service';
+import { ListService } from '../services/list.service';
+import { PlayerDataService } from '../services/player-data.service';
+import { RoleService } from '../services/role.service';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -28,12 +31,12 @@ export class CheckListComponent implements OnInit {
   userEmail: string | null = null;
 
   roleOptions = [
-    { label: 'Centrocampista (Midfielder)', value: 'midfielder' },
-    { label: 'Difensore (Defender)', value: 'defender' },
-    { label: 'Terzino (Wingback)', value: 'wingback' },
-    { label: 'Attaccante (Forward)', value: 'forward' },
-    { label: 'Ala (Winger)', value: 'winger' },
-    { label: 'Portiere (Goalkeeper)', value: 'goalkeeper' }
+    { label: 'COMMON.ROLES.MIDFIELDER', value: 'midfielder' },
+    { label: 'COMMON.ROLES.DEFENDER', value: 'defender' },
+    { label: 'COMMON.ROLES.WINGBACK', value: 'wingback' },
+    { label: 'COMMON.ROLES.FORWARD', value: 'forward' },
+    { label: 'COMMON.ROLES.WINGER', value: 'winger' },
+    { label: 'COMMON.ROLES.KEEPER', value: 'goalkeeper' }
   ];
 
   // --- STATO SELEZIONATO ---
@@ -48,6 +51,12 @@ export class CheckListComponent implements OnInit {
   // --- CSV IN MEMORIA ---
   private csvRows: HattrickCsvRow[] = [];
 
+  // --- LISTE DA DB ---
+  availableLists: any[] = [];
+  groupedLists: { [teamName: string]: any[] } = {};
+  selectedListId = '';
+  playersFromList: HattrickPlayer[] = [];
+
   // --- BACKEND ---
   private readonly API_URL = 'https://nt-data-lab-705728164092.europe-west1.run.app';
 
@@ -56,7 +65,10 @@ export class CheckListComponent implements OnInit {
     private mapper: CsvMapperService,
     private zone: NgZone,
     private targetsService: TargetsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private listService: ListService,
+    private playerDataService: PlayerDataService,
+    private roleService: RoleService
   ) { }
 
   ngOnInit() {
@@ -64,11 +76,106 @@ export class CheckListComponent implements OnInit {
     this.authService.user$.pipe(take(1)).subscribe(user => {
       this.userEmail = user ? user.email : null;
 
-      // 2. Se loggato, scarica i target custom
+      // 2. Se loggato, scarica i target custom e le liste disponibili
       if (this.userEmail) {
         this.fetchUserTargets();
+        this.loadAvailableLists();
       }
     });
+  }
+
+  loadAvailableLists() {
+    // Prima prendiamo i team per avere i nomi
+    this.roleService.getUserContext().subscribe({
+      next: (ctx: any) => {
+        const owned = ctx.owned_teams || [];
+        const memberships = (ctx.memberships || [])
+          .filter((m: any) => m.team_info)
+          .map((m: any) => m.team_info);
+
+        const allTeams = [...owned, ...memberships];
+        const teamMap = new Map(allTeams.map(t => [t.id, `${t.type || ''} ${t.name || ''}`.trim()]));
+
+        // Poi carichiamo le liste e raggruppiamo
+        this.listService.getLists().subscribe({
+          next: (res: any) => {
+            const rawLists = res.lists || [];
+            this.groupedLists = {};
+
+            rawLists.forEach((list: any) => {
+              const groupLabel = teamMap.get(list.team_id) || list.team_id || 'Altro';
+              if (!this.groupedLists[groupLabel]) {
+                this.groupedLists[groupLabel] = [];
+              }
+              this.groupedLists[groupLabel].push(list);
+            });
+          },
+          error: (err: any) => console.error('Errore caricamento liste', err)
+        });
+      }
+    });
+  }
+
+  onListChange() {
+    if (!this.selectedListId) {
+      this.playersFromList = [];
+      this.playerResults = [];
+      return;
+    }
+
+    this.isProcessing = true;
+    this.playerResults = [];
+    this.csvRows = []; // Reset CSV se stiamo usando una lista
+
+    this.playerDataService.getListPlayersDetailed(this.selectedListId).subscribe({
+      next: (res: any) => {
+        this.playersFromList = res.players || [];
+        this.runAnalysisFromList();
+      },
+      error: (err: any) => {
+        console.error('Errore caricamento giocatori lista', err);
+        this.isProcessing = false;
+      }
+    });
+  }
+
+  private runAnalysisFromList() {
+    if (!this.playersFromList.length) {
+      this.isProcessing = false;
+      return;
+    }
+
+    this.playerResults = [];
+    this.isProcessing = true;
+
+    this.playersFromList.forEach(p => {
+      const payload = this.mapper.mapPlayerToPayload(
+        p,
+        this.selectedTarget,
+        this.selectedVariant,
+        this.selectedRole
+      );
+
+      const playerEntry: PlayerResult = {
+        id: p.PlayerID,
+        fullName: `${p.FirstName} ${p.LastName}`,
+        status: 'LOADING',
+        trainingType: payload.training_type,
+        stamina: payload.stamina_share,
+        lastUpdate: p.Updated || '',
+        age: p.Age !== undefined ? String(p.Age) : '',
+        ageDays: p.AgeDays !== undefined ? String(p.AgeDays) : '',
+        lastScoutNote: p.LastScoutNote || '',
+        transferListed: p.TransferListed || '0',
+        teamTrainerSkill: p.TeamTrainerSkill !== undefined ? String(p.TeamTrainerSkill) : '',
+        owningUserID: p.OwningUserID || ''
+      };
+
+      this.playerResults.push(playerEntry);
+      this.analyzePlayer(payload, playerEntry);
+    });
+
+    this.isProcessing = false;
   }
 
   fetchUserTargets() {
@@ -99,6 +206,8 @@ export class CheckListComponent implements OnInit {
 
     this.playerResults = [];
     this.csvRows = [];
+    this.selectedListId = ''; // Reset lista se carichiamo un CSV
+    this.playersFromList = [];
     this.isProcessing = true;
 
     this.processCsvInMemory(file);
@@ -172,18 +281,18 @@ export class CheckListComponent implements OnInit {
   // EVENTI UI
   // =====================================================
   onRoleChange(): void {
-    if (!this.csvRows.length) return;
-    this.runAnalysisFromCsv();
+    if (this.csvRows.length) this.runAnalysisFromCsv();
+    if (this.playersFromList.length) this.runAnalysisFromList();
   }
 
   onTargetChange(): void {
-    if (!this.csvRows.length) return;
-    this.runAnalysisFromCsv();
+    if (this.csvRows.length) this.runAnalysisFromCsv();
+    if (this.playersFromList.length) this.runAnalysisFromList();
   }
 
   onVariantChange(): void {
-    if (!this.csvRows.length) return;
-    this.runAnalysisFromCsv();
+    if (this.csvRows.length) this.runAnalysisFromCsv();
+    if (this.playersFromList.length) this.runAnalysisFromList();
   }
 
   // =====================================================
