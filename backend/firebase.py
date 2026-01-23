@@ -315,7 +315,14 @@ class ListManager:
         if team_id not in team_ids:
             raise PermissionError("Non hai permessi su questa lista.")
 
-        # 2. Verifica permessi sul giocatore (NativeLeagueID)
+        # 2. Recupera la nazione (NativeLeagueID) associata alla lista tramite il team
+        team_doc = db.collection('teams').document(team_id).get()
+        if not team_doc.exists:
+            return {"status": "error", "message": "Team associato alla lista non trovato."}
+        
+        list_league_id = str(team_doc.to_dict().get('NativeLeagueID', ''))
+
+        # 3. Verifica permessi sul giocatore (NativeLeagueID)
         player_ref = db.collection(self.players_coll).document(str(player_id))
         player_snap = player_ref.get()
         if not player_snap.exists:
@@ -324,12 +331,14 @@ class ListManager:
         player_data = player_snap.to_dict()
         player_league_id = str(player_data.get('NativeLeagueID', ''))
         
-        # Recuperiamo i league ID gestiti dall'utente
-        from firebase import RoleManager # Import locale per evitare circolarità se presente
+        # 4. Controllo incrociato: la nazione del giocatore deve corrispondere alla nazione della lista
+        if player_league_id != list_league_id:
+            raise PermissionError(f"Questo giocatore (Nazione {player_league_id}) non può essere aggiunto a questa lista (Nazione {list_league_id}).")
+
+        # 5. Verifica globale permessi utente (opzionale ma sicuro)
+        from firebase import RoleManager
         role_mgr = RoleManager()
-        managed_league_ids = role_mgr.get_managed_league_ids(user_email)
-        
-        if player_league_id not in managed_league_ids:
+        if player_league_id not in role_mgr.get_managed_league_ids(user_email):
             raise PermissionError(f"Non hai i permessi per gestire giocatori della nazione {player_league_id}.")
 
         # 3. Procedi con l'aggiunta
@@ -578,10 +587,10 @@ class PlayerManager:
             print(f"Error during sync: {e}")
             return {"error": str(e)}
 
-    def search_players(self, user_email, query):
+    def search_players(self, user_email, query, list_id=None):
         """
         Cerca giocatori nella collection players-details filtrando per i league ID 
-        gestiti dall'utente.
+        gestiti dall'utente e opzionalmente per la nazione di una specifica lista.
         """
         from firebase import RoleManager
         role_mgr = RoleManager()
@@ -589,6 +598,20 @@ class PlayerManager:
         
         if not managed_league_ids:
             return []
+
+        # Se list_id è fornito, filtriamo ulteriormente per la nazione della lista
+        if list_id:
+            doc_list = db.collection('lists').document(list_id).get()
+            if doc_list.exists:
+                team_id = doc_list.to_dict().get('team_id')
+                team_doc = db.collection('teams').document(team_id).get()
+                if team_doc.exists:
+                    list_league_id = str(team_doc.to_dict().get('NativeLeagueID', ''))
+                    # L'utente deve poter gestire la nazione della lista
+                    if list_league_id in managed_league_ids:
+                        managed_league_ids = [list_league_id]
+                    else:
+                        return [] # L'utente non ha permessi su questa lista/nazione
 
         # Cerchiamo sia come stringa che come intero per sicurezza sui tipi in Firestore
         search_ids = []

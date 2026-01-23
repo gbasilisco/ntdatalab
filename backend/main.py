@@ -195,7 +195,8 @@ def analyze_player(request):
 
             elif method == 'search_players':
                 query = request_json.get('query', '')
-                result = manager.search_players(requester, query)
+                list_id = request_json.get('listId')
+                result = manager.search_players(requester, query, list_id)
                 return ({"players": result}, 200, headers)
             
             else:
