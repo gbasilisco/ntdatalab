@@ -10,7 +10,10 @@
         <h3>{{ 'MANAGE_PLAYER.SEARCH_PLAYER_TITLE' | translate }}</h3>
         <div class="add-row">
             <input [(ngModel)]="searchQuery" (input)="searchPlayers()"
-                [placeholder]="'MANAGE_PLAYER.PLACEHOLDER_SEARCH' | translate" />
+                [placeholder]="'MANAGE_PLAYER.PLACEHOLDER_SEARCH' | translate" style="flex: 1;" />
+            <button (click)="showAll()" class="btn-secondary" style="white-space: nowrap;">
+                {{ 'MANAGE_PLAYER.SHOW_ALL' | translate }}
+            </button>
         </div>
         <div *ngIf="isSearching" class="loading-small">{{ 'MANAGE_PLAYER.SEARCH_LOADING' | translate }}</div>
         <ul class="search-results" *ngIf="searchResults.length > 0">

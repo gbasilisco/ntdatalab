@@ -68,6 +68,21 @@ export class ManagePlayerComponent implements OnInit {
     });
   }
 
+  showAll() {
+    this.isSearching = true;
+    this.searchQuery = '';
+    this.playerDataService.searchPlayers('', this.listId).subscribe({
+      next: (res) => {
+        this.searchResults = res.players;
+        this.isSearching = false;
+      },
+      error: (err) => {
+        console.error(err);
+        this.isSearching = false;
+      }
+    });
+  }
+
   addPlayer(playerId?: string) {
     const pid = playerId || this.newPlayerId;
     if (!pid) return;
