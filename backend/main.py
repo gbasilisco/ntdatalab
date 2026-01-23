@@ -10,8 +10,11 @@ def analyze_player(request):
     Funge da router per supportare la retrocompatibilità.
     """
     # --- ROUTING PER MOCK (Retrocompatibilità) ---
-    # Se il path è /mock o è presente il parametro 'file', delega a mock(request)
-    if 'file' in request.args or request.path == '/mock':
+    # Log per debug: vediamo cosa arriva
+    print(f"DEBUG: Path={request.path}, Args={request.args}")
+    
+    # Se il path contiene /mock o è presente il parametro 'file', delega a mock(request)
+    if 'file' in request.args or '/mock' in request.path:
         return mock(request)
 
     # --- 1. GESTIONE CORS (Pre-flight request) ---
@@ -33,9 +36,9 @@ def analyze_player(request):
     request_json = request.get_json(silent=True)
     
     if not request_json:
-        # Se è una GET senza parametri mock, restituiamo errore 
-        # (mantenendo comportamento precedente per le POST senza body)
-        return ({"error": "JSON payload mancante o parametri non validi"}, 400, headers)
+        # Se siamo qui, il routing per 'file' o '/mock' sopra ha fallito 
+        # E non c'è un body JSON.
+        return ({"error": "JSON payload mancante o parametri Mock non riconosciuti (Ver: 1.1)"}, 400, headers)
 
     try:
         action = request_json.get('action')
