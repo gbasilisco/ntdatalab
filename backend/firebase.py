@@ -311,19 +311,42 @@ class PlayerManager:
         # Rimosso check intersection con liste visibili
         return player_data
 
+    def _clean_data(self, data):
+        """
+        Rimuove i valori None dalla mappa per evitare problemi con Firestore 
+        e pulisce le chiavi da eventuali spazi bianchi extra.
+        """
+        clean = {}
+        for k, v in data.items():
+            if v is not None:
+                # Se è una stringa vuota, Firestore la accetta, 
+                # ma potremmo volerla saltare se crea problemi.
+                clean[k.strip()] = v
+        return clean
+
     def save_player(self, user_email, player_data):
         """
         Salva o aggiorna un giocatore assicurando il riferimento all'utente (owner_email).
         """
-        player_id = str(player_data.get('PlayerID'))
-        if not player_id:
-            raise ValueError("PlayerID mancante.")
+        player_data = self._clean_data(player_data)
         
+        # Cerca PlayerID in modo case-insensitive se necessario, 
+        # ma qui assumiamo il formato standard.
+        pid_raw = player_data.get('PlayerID')
+        if pid_raw is None or str(pid_raw).strip() == "":
+            raise ValueError("PlayerID mancante o non valido dopo la pulizia.")
+        
+        player_id = str(pid_raw).strip()
         player_data['owner_email'] = user_email
         player_data['updated_at'] = firestore.SERVER_TIMESTAMP
         
-        db.collection(self.players_coll).document(player_id).set(player_data, merge=True)
-        return {"id": player_id, "status": "saved"}
+        try:
+            db.collection(self.players_coll).document(player_id).set(player_data, merge=True)
+            return {"id": player_id, "status": "saved"}
+        except Exception as e:
+            print(f"Error saving player {player_id}: {e}")
+            raise e
+
     def import_players(self, user_email, players_list):
         """
         Salva una lista di giocatori in batch (max 500 per batch).
@@ -331,29 +354,36 @@ class PlayerManager:
         if not players_list:
             return {"status": "success", "count": 0}
 
-        # Firestore batch supports max 500 operations
         batch = db.batch()
         count = 0
         total = 0
         
-        for p in players_list:
-            player_id = str(p.get('PlayerID'))
-            if not player_id:
+        for p_raw in players_list:
+            try:
+                p = self._clean_data(p_raw)
+                pid_raw = p.get('PlayerID')
+                
+                if pid_raw is None or str(pid_raw).strip() == "":
+                    # Salta righe invalide
+                    continue
+                
+                player_id = str(pid_raw).strip()
+                p['owner_email'] = user_email
+                p['updated_at'] = firestore.SERVER_TIMESTAMP
+                
+                doc_ref = db.collection(self.players_coll).document(player_id)
+                batch.set(doc_ref, p, merge=True)
+                
+                count += 1
+                total += 1
+                
+                if count == 500:
+                    batch.commit()
+                    batch = db.batch()
+                    count = 0
+            except Exception as row_err:
+                print(f"Skipping row due to error: {row_err}")
                 continue
-            
-            p['owner_email'] = user_email
-            p['updated_at'] = firestore.SERVER_TIMESTAMP
-            
-            doc_ref = db.collection(self.players_coll).document(player_id)
-            batch.set(doc_ref, p, merge=True)
-            
-            count += 1
-            total += 1
-            
-            if count == 500:
-                batch.commit()
-                batch = db.batch()
-                count = 0
         
         if count > 0:
             batch.commit()
