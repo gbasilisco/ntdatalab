@@ -35,6 +35,7 @@ export class AppComponent {
 
   title = 'NT Data Lab';
   compName = '';
+  menuOpen = false;
 
   constructor(
     private router: Router,
@@ -74,6 +75,7 @@ export class AppComponent {
       if (val instanceof ActivationEnd) {
         this.compName = val.snapshot.component!.name
         console.log('componentName:', this.compName);
+        this.menuOpen = false; // Close mobile menu on navigation
       }
     });
 
@@ -102,6 +104,11 @@ export class AppComponent {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('selectedLang', lang);
     }
+    this.menuOpen = false;
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
   logout() {

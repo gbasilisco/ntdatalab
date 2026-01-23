@@ -1,22 +1,31 @@
-<div class="topnav" id="myTopnav">
+<div class="topnav" id="myTopnav" [class.responsive]="menuOpen">
+  <div class="logo-row">
+    <a routerLink="/" class="logo"><img src="../assets/img/icons/common/LogoNT_mini.png"></a>
+    <a href="javascript:void(0);" class="icon" (click)="toggleMenu()">
+      &#9776;
+    </a>
+  </div>
 
-  <!-- User Menu -->
-  <a href="#home" class="logo"><img src="../assets/img/icons/common/LogoNT_mini.png"></a>
-  <a routerLink="/check-list" routerLinkActive="active">{{ 'MENU.MANAGELIST' | translate }}</a>
-  <a routerLink="/manage-lists" routerLinkActive="active">{{ 'MENU.MYLIST' | translate }}</a>
-  <a routerLink="/my-players" routerLinkActive="active">{{ 'MENU.MY_PLAYERS' | translate }}</a>
-  <a routerLink="/manage-roles" routerLinkActive="active">{{ 'MENU.MANAGE_ROLES' | translate }}</a>
-  <a routerLink="/manage-targets" routerLinkActive="active">{{ 'MENU.MANAGE_TARGETS' | translate }}</a>
-  <a routerLink="/make-portal-link" routerLinkActive="active">{{ 'MENU.MAKEPORTALLINK' | translate }}</a>
+  <div class="nav-links">
+    <a routerLink="/check-list" routerLinkActive="active">{{ 'MENU.MANAGELIST' | translate }}</a>
+    <a routerLink="/manage-lists" routerLinkActive="active">{{ 'MENU.MYLIST' | translate }}</a>
+    <a routerLink="/my-players" routerLinkActive="active">{{ 'MENU.MY_PLAYERS' | translate }}</a>
+    <a routerLink="/manage-roles" routerLinkActive="active">{{ 'MENU.MANAGE_ROLES' | translate }}</a>
+    <a routerLink="/manage-targets" routerLinkActive="active">{{ 'MENU.MANAGE_TARGETS' | translate }}</a>
+    <a routerLink="/make-portal-link" routerLinkActive="active">{{ 'MENU.MAKEPORTALLINK' | translate }}</a>
 
-  <a routerLink="/contact" routerLinkActive="active">{{ 'MENU.CONTACT' | translate }}</a>
-  <a routerLink="/about" routerLinkActive="active">{{ 'MENU.ABOUT' | translate }}</a>
+    <a routerLink="/contact" routerLinkActive="active">{{ 'MENU.CONTACT' | translate }}</a>
+    <a routerLink="/about" routerLinkActive="active">{{ 'MENU.ABOUT' | translate }}</a>
 
-  <!-- Language Menu -->
-  <button (click)="changeLanguage('it')">IT</button>
-  <button (click)="changeLanguage('en')">EN</button>
-  <button (click)="logout()" *ngIf="authService.user$ | async" class="logout-btn">{{ 'MENU.LOGOUT' | translate
-    }}</button>
+    <!-- Language Menu -->
+    <div class="lang-menu">
+      <button (click)="changeLanguage('it')">IT</button>
+      <button (click)="changeLanguage('en')">EN</button>
+    </div>
+
+    <button (click)="logout()" *ngIf="authService.user$ | async" class="logout-btn">{{ 'MENU.LOGOUT' | translate
+      }}</button>
+  </div>
 </div>
 
 <div style="padding-left:16px">
