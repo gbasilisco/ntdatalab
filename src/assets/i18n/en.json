@@ -199,5 +199,31 @@
     "PLACEHOLDER_TEAMIDS": "e.g. 1000, 2000",
     "SAVE_BUTTON": "Save Profile",
     "SAVING_BUTTON": "Saving..."
+  },
+  "NATIONALS_PLAYER": {
+    "TITLE": "National Players",
+    "LEAGUE_PREFIX": "League:",
+    "FILTERS": {
+      "AGE": "Age",
+      "NATIVE_LEAGUE_ID": "Native League ID",
+      "TSI_MIN": "TSI (Min)",
+      "GOALKEEPING": "Goalkeeping",
+      "DEFENDING": "Defending",
+      "PLAYMAKING": "Playmaking",
+      "WINGER": "Winger",
+      "PASSING": "Passing",
+      "SCORING": "Scoring",
+      "SET_PIECES": "Set Pieces",
+      "SPECIALTY": "Specialty",
+      "ALL": "All",
+      "CLEAR": "Clear Filters"
+    },
+    "TABLE": {
+      "ADD_TO_LIST": "Add to List"
+    },
+    "ACTIONS": {
+      "SELECT_LIST": "Select List...",
+      "ADD": "Add"
+    }
   }
 }

@@ -11,6 +11,7 @@ import { ManageTargetsComponent } from './manage-targets/manage-targets.componen
 import { ManageListComponent } from './manage-list/manage-list.component';
 import { MyPlayersDetailComponent } from './my-players-detail/my-players-detail.component';
 import { RegisterComponent } from './register/register.component';
+import { NationalsPlayerComponent } from './national-players/nationals-player.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'check-list', pathMatch: 'full' },
@@ -25,5 +26,6 @@ export const routes: Routes = [
     { path: 'manage-lists/:id/players', component: ManagePlayerComponent, canActivate: [authGuard] },
     { path: 'manage-roles', component: ManageRolesComponent, canActivate: [authGuard] },
     { path: 'manage-targets', component: ManageTargetsComponent, canActivate: [authGuard] },
-    { path: 'manage-lists', component: ManageListComponent, canActivate: [authGuard] }
+    { path: 'manage-lists', component: ManageListComponent, canActivate: [authGuard] },
+    { path: 'nationals-player', component: NationalsPlayerComponent, canActivate: [authGuard] }
 ];

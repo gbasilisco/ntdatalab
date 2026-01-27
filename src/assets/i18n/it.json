@@ -10,6 +10,7 @@
     "MYLIST": "Gestione Liste",
     "MY_PLAYERS": "Miei Giocatori",
     "MANAGE_ROLES": "Gestione Ruoli",
+    "NATIONALS_PLAYERS": "Nazionali",
     "CONTACT": "Contatti",
     "ABOUT": "About",
     "LOGOUT": "Esci"
@@ -199,5 +200,31 @@
     "PLACEHOLDER_TEAMIDS": "Es. 1000, 2000",
     "SAVE_BUTTON": "Salva Profilo",
     "SAVING_BUTTON": "Salvataggio..."
+  },
+  "NATIONALS_PLAYER": {
+    "TITLE": "Giocatori Nazionali",
+    "LEAGUE_PREFIX": "Lega:",
+    "FILTERS": {
+      "AGE": "Età",
+      "NATIVE_LEAGUE_ID": "ID Lega Nativa",
+      "TSI_MIN": "TSI (Min)",
+      "GOALKEEPING": "Parate",
+      "DEFENDING": "Difesa",
+      "PLAYMAKING": "Regia",
+      "WINGER": "Cross",
+      "PASSING": "Passaggi",
+      "SCORING": "Attacco",
+      "SET_PIECES": "Calci Piazzati",
+      "SPECIALTY": "Specialità",
+      "ALL": "Tutte",
+      "CLEAR": "Pulisci Filtri"
+    },
+    "TABLE": {
+      "ADD_TO_LIST": "Aggiungi a Lista"
+    },
+    "ACTIONS": {
+      "SELECT_LIST": "Seleziona Lista...",
+      "ADD": "Aggiungi"
+    }
   }
 }

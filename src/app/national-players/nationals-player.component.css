@@ -1,0 +1,272 @@
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 20px;
+}
+
+.league-group {
+    margin-bottom: 40px;
+}
+
+.league-group h3 {
+    background-color: #34495e;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.player-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+}
+
+.player-table th,
+.player-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.player-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.player-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.player-table th.sortable:hover {
+    background-color: #e9ecef;
+}
+
+.btn-detail {
+    background-color: #09aa6c;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+/* Filter Card Styles */
+.filter-card {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.filters-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 120px;
+}
+
+.filter-group label {
+    font-size: 0.8em;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.range-inputs {
+    display: flex;
+    gap: 5px;
+}
+
+.range-inputs input {
+    width: 60px;
+}
+
+.btn-clear {
+    margin-top: 18px;
+    /* align with inputs */
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-clear:hover {
+    background-color: #c0392b;
+}
+
+/* Hattrick Style Detail Card */
+.player-detail-card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.ht-header {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.ht-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-decoration: underline dotted;
+}
+
+.ht-id {
+    color: #888;
+    margin-left: 8px;
+}
+
+.ht-sub-row {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.ht-skills-summary {
+    font-style: italic;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.ht-info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 600px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.label {
+    width: 180px;
+    flex-shrink: 0;
+    color: #333;
+}
+
+.value {
+    font-weight: 600;
+}
+
+.stars {
+    color: #ffd700;
+}
+
+.card-icon {
+    font-size: 0.8em;
+    margin-left: 10px;
+}
+
+.card-icon.yellow {
+    color: #f1c40f;
+}
+
+.card-icon.red {
+    color: #e74c3c;
+}
+
+.loading,
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Action cell specific */
+.action-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.list-select {
+    padding: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    max-width: 150px;
+}
+
+.btn-add {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-add:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.no-lists-text {
+    font-size: 0.8em;
+    color: #999;
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .player-detail-card {
+        padding: 15px;
+    }
+
+    .info-row {
+        flex-direction: column;
+        margin-bottom: 10px;
+    }
+
+    .label {
+        width: 100%;
+        font-size: 0.8em;
+        color: #777;
+    }
+
+    .ht-name {
+        font-size: 1.2em;
+    }
+}
